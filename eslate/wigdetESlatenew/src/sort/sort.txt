@@ -1,0 +1,11 @@
+1024 elements:
+Vector: 4968 msec
+Array: 4980 msec
+IntegerBaseArray: 629 msec
+IntBaseArray: 325 msec
+
+2048 elements:
+Vector: 19783 msec
+Array: 19910 msec
+IntegerBaseArray: 2436 msec
+IntBaseArray: 1078 msec

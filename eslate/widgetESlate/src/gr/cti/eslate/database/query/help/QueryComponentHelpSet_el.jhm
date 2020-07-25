@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='Windows-1253' ?>
+<!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN"
+   "map_1_0.dtd">
+<map version="1.0">
+
+    <mapID target="Areas" url="Areas.htm" frame="_self"/>
+    <mapID target="Events" url="Events.htm" frame="_self"/>
+    <mapID target="How_we_use_the_Query" url="How_we_use_the_Query.htm" frame="_self"/>
+    <mapID target="Mycenae" url="Mycenae.htm" frame="_self"/>
+    <mapID target="plugs" url="plugs.htm" frame="_self"/>
+    <mapID target="Properties" url="Properties.htm" frame="_self"/>
+    <mapID target="Screen_Layout" url="Screen_Layout.htm" frame="_self"/>
+    <mapID target="Scripting" url="Scripting.htm" frame="_self"/>
+    <mapID target="table_list" url="table_list.htm" frame="_self"/>
+    <mapID target="Toolbar1" url="Toolbar1.htm" frame="_self"/>
+    <mapID target="Toolbar2" url="Toolbar2.htm" frame="_self"/>
+    <mapID target="use_of_the_mouse" url="use_of_the_mouse.htm" frame="_self"/>
+    <mapID target="_fhtoc16" url="_fhtoc16.gif"/>
+    <mapID target="_fhtoc0" url="_fhtoc0.gif"/>
+    <mapID target="_fhtoc8" url="_fhtoc8.gif"/>
+</map>

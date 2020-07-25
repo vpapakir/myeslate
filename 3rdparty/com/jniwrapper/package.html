@@ -1,0 +1,38 @@
+<html>
+<body>
+The <code>com.jniwrapper</code> package contains classes that allow calling native functions from Java(TM) code.
+<p>
+Calling native functions is quite simple if you follow these steps:
+<ul>
+<li>
+Prepare library search path. <code>DefaultLibraryLoader</code> contains all your <code>PATH</code> entries and
+gives you ability to add your own:
+<pre>
+    DefaultLibraryLoader.getInstance().addPath(new File("path/to/my/code"));
+</pre>
+As the name suggests this class is used by default to load native libraries.
+</li>
+<li>
+Prepare call parameters. You have to create variables for each argument and for the return value.
+<pre>
+    LongInt retVal = new LongInt(0);
+    WideString str = new WideString(256);
+    UInt32 len = new UInt32(256);
+</pre>
+</li>
+<li>
+Load native library and invoke a function:
+<pre>
+    Library kernel = new Library("kernel32");
+    kernel.getFunction("GetCurrentDirectoryW", null).invoke(retVal, len, new Pointer.OutOnly(str));
+</pre>
+</li>
+<li>
+Process the result:
+<pre>
+    System.out.println("Current working directory is: " + str.getValue());
+</pre>
+</li>
+</ul>
+</body>
+</html>

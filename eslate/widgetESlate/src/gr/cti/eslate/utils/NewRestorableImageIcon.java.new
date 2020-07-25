@@ -1,0 +1,472 @@
+package gr.cti.eslate.utils;
+
+import javax.swing.Icon;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.ColorModel;
+import java.awt.image.PixelGrabber;
+import java.awt.image.ImageObserver;
+import java.awt.image.MemoryImageSource;
+import java.awt.image.RenderedImage;
+import java.awt.image.renderable.ParameterBlock;
+import java.net.URL;
+import java.io.*;
+import javax.media.jai.*;
+import javax.swing.*;
+import com.sun.jimi.core.*;
+import com.keypoint.PngEncoder;
+import com.sun.media.jai.codec.MemoryCacheSeekableStream;
+import Acme.*;
+import gr.cti.typeArray.*;
+
+/**
+ * This class provides a similar functionality to that of
+ * <code>ImageIcon</code> and can be serialized in a Java
+ * version-independent manner.
+ *
+ * @version	1.7.28, 11-Oct-2002
+ * @author	Kriton Kyrimis
+ */
+public class NewRestorableImageIcon implements Icon, Serializable
+{
+  //static final long serialVersionUID = 532615968316031794L;
+  static final long serialVersionUID = -4430479151350855914L;
+
+  /**
+   * Specifies that the icon's image should be saved in GIF format.
+   */
+  public final static int GIF = 0;
+  /**
+   * Specifies that the icon's image should be saved in PNG format.
+   */
+  public final static int PNG = 1;
+  /**
+   * Specifies that the icon's image should be saved in JPEG format.
+   */
+  public final static int JPEG = 2;
+  /**
+   * Specifies that the icon's image should be saved in JPEG format.
+   */
+  public final static int JPG = JPEG;
+  /**
+   * Specifies that the icon's image should be saved in BMP format.
+   */
+  public final static int BMP = 3;
+
+  /**
+   * The format in which the image will be saved when the class is serialized.
+   */
+  private int saveFormat = PNG;
+  /**
+   * The image of the icon, in JAI format.
+   */
+  transient private PlanarImage image;
+  /**
+   * The description associated with the icon.
+   */
+  transient private String description;
+
+  /**
+   * Creates a NewRestorableImageIcon from the specified file.
+   * @param	filename	The name of the file containing the image.
+   * @param	description	A brief textual description of the image.
+   * @see	#NewRestorableImageIcon(String)
+   */
+  public NewRestorableImageIcon(String filename, String description)
+  {
+    image = JAI.create("FileLoad", filename);
+    this.description = description;
+  }
+
+  /**
+   * Creates a NewRestorableImageIcon from the specified file.
+   * The specified String can be a file name or a
+   * file path. When specifying a path, use the Internet-standard
+   * forward-slash ("/") as a separator. For example, specify:<pre>
+   *    new NewRestorableImageIcon("images/myImage.gif")
+   * </pre>
+   * (The string is converted to an URL, so the forward-slash works
+   * on all systems.)
+   *
+   * @param	filename	A String specifying a filename or path.
+   */
+  public NewRestorableImageIcon (String filename)
+  {
+    this(filename, filename);
+  }
+
+  /**
+   * Creates a NewRestorableImageIcon from the specified URL.
+   * @param	location	The URL for the image.
+   * @param	description	A brief textual description of the image.
+   * @see #NewRestorableImageIcon(String)
+   */
+  public NewRestorableImageIcon(URL location, String description)
+  {
+    image = JAI.create("URL", location);
+    this.description = description;
+  }
+
+  /**
+   * Creates a NewRestorableImageIcon from the specified URL.
+   * @param	location	The URL for the image.
+   */
+  public NewRestorableImageIcon (URL location)
+  {
+    this(location, location.toExternalForm());
+  }
+
+  /**
+   * Creates a NewRestorableImageIcon from the image.
+   * @param	img		The image.
+   * @param	description	A brief textual description of the image.
+   */
+  public NewRestorableImageIcon(Image img, String description)
+  {
+    image = JAI.create("AWTImage", img);
+    this.description = description;
+  }
+
+  /**
+   * Creates a NewRestorableImageIcon from an image object.
+   * @param	img		The image.
+   */
+  public NewRestorableImageIcon (Image img)
+  {
+    this(img, getImageDescription(img));
+  }
+
+  /**
+   * Returns the description of an image.
+   * @param	img	The image.
+   * @return	The description of the image, or <code>null</code>, if no
+   *		description is available.
+   */
+  private static String getImageDescription(Image img)
+  {
+    Object o = img.getProperty("comment", null);
+    String desc;
+    if (o instanceof String) {
+      desc = (String)o;
+    }else{
+      desc = "";
+    }
+    return desc;
+  }
+
+  /**
+   * Creates a NewRestorableImageIcon from an array of bytes which were
+   * read from an image file containing a supported image format,
+   * such as GIF or JPEG.  Normally this array is created
+   * by reading an image using Class.getResourceAsStream(), but
+   * the byte array may also be statically stored in a class.
+   *
+   * @param	imageData	An array of pixels in an image format supported
+   *				by the AWT Toolkit, such as GIF or JPEG.
+   * @param	description	A brief textual description of the image.
+   * @see	java.awt.Toolkit#createImage
+   */
+  public NewRestorableImageIcon (byte[] imageData, String description)
+  {
+    try {
+      InputStream is = new ByteArrayInputStream(imageData);
+      MemoryCacheSeekableStream ms = new MemoryCacheSeekableStream(is);
+      image = JAI.create("Stream", ms);
+      ms.close();
+    } catch (IOException ioe) {
+    }
+    this.description = description;
+  }
+
+  /**
+   * Creates a NewRestorableImageIcon from an array of bytes which were
+   * read from an image file containing a supported image format,
+   * such as GIF or JPEG.  Normally this array is created
+   * by reading an image using Class.getResourceAsStream(), but
+   * the byte array may also be statically stored in a class.
+   *
+   * @param	imageData	An array of pixels in an image format
+   *				supported by the AWT Toolkit, such as GIF or
+   *				JPEG.
+   * @see	java.awt.Toolkit#createImage
+   */
+  public NewRestorableImageIcon (byte[] imageData)
+  {
+    this(imageData, "");
+  }
+
+  /**
+   * Creates a NewRestorableImageIcon from an input stream containing the bytes
+   * of an image file in a supported image format, such as PNG, JPG, or GIF.
+   * @param	s		The input stream from which the data will be
+   *				read.
+   * @param	description	A brief textual description of the image.
+   */
+  public NewRestorableImageIcon(InputStream s, String description)
+  {
+    MemoryCacheSeekableStream ms = new MemoryCacheSeekableStream(s);
+    image = JAI.create("Stream", ms);
+    this.description = description;
+  }
+
+  /**
+   * Creates a NewRestorableImageIcon from an input stream containing the bytes
+   * of an image file in a supported image format, such as PNG, JPG, or GIF.
+   * @param	s	The input stream from which the data will be read.
+   */
+  public NewRestorableImageIcon(InputStream s)
+  {
+    this(s, "");
+  }
+
+  /**
+   * Creates an uninitialized image icon.
+   */
+  public NewRestorableImageIcon()
+  {
+    image = null;
+    description = null;
+  }
+
+  /**
+   * Get the description of the image.  This is meant to be a brief
+   * textual description of the object.  For example, it might be
+   * presented to a blind user to give an indication of the purpose
+   * of the image.
+   * @return	The requested description.
+   */
+  public String getDescription()
+  {
+    return description;
+  }
+
+  /**
+   * Get the height of the NewRestorableImageIcon.
+   * @return	The requested height.
+   */
+  public int getIconHeight()
+  {
+    return image.getHeight();
+  }
+
+  /**
+   * Get the width of the NewRestoreableImageIcon.
+   * @return	The requested width.
+   */
+  public int getIconWidth()
+  {
+    return image.getWidth();
+  }
+
+  /**
+   * Returns the NewRestorableImageIcon's Image.
+   * <EM>Note:</EM> This method creates a copy of the image, so invokinging
+   * it is expensive.
+   * @return	The requested image.
+   */
+  public Image getImage()
+  {
+    return image.getAsBufferedImage();
+  }
+
+  /**
+   * Returns the NewRestorableImageIcon image as a <code>RenderedImage</code>.
+   * <EM>Note:</EM> This method is fast, so prefer it over
+   * <code>getImage()</code>.
+   * @return	The requested image.
+   */
+  public RenderedImage getRenderedImage()
+  {
+    return image;
+  }
+
+//  /**
+//   * Returns the status of the image loading operation.
+//   * @return	The loading status as defined by java.awt.MediaTracker.
+//   * @see	java.awt.MediaTracker#ABORTED
+//   * @see	java.awt.MediaTracker#ERRORED
+//   * @see	java.awt.MediaTracker#COMPLETE
+//   */
+//  public int getImageLoadStatus()
+//  {
+//    return imageIcon.getImageLoadStatus();
+//  }
+//
+//  /**
+//   *  Return the image observer for the image
+//   * @return	The requested image observer.
+//   */
+//  public ImageObserver getImageObserver()
+//  {
+//    return imageIcon.getImageObserver();
+//  }
+//  
+//  /**
+//   * Set the image observer for the image.  Set this
+//   * property if the NewRestorableImageIcon contains an animated GIF, so
+//   * the observer is notified to update its display.
+//   * For example:
+//   * <pre>
+//   *     icon = new NewRestorableImageIcon(...)
+//   *     button.setIcon(icon);
+//   *     icon.setImageObserver(button);
+//   * </pre>
+//   * @param	observer	The image observer to set.
+//   */
+//  public void setImageObserver(ImageObserver observer)
+//  {
+//    imageIcon.setImageObserver(observer);
+//  }
+
+  /**
+   * Paints the Icon.
+   */
+  public synchronized void paintIcon(Component c, Graphics g, int x, int y)
+  {
+    AffineTransform at = new AffineTransform();
+    at.translate((double)x, (double)y);
+    ((Graphics2D)g).drawRenderedImage(image, at);
+  }
+
+  /**
+   * Paints the Icon after scaling it to a specified size.
+   * @param	c	The component on which to paint the icon.
+   * @param	g	The graphics context on which to paint the icon.
+   * @param	x	The X coordinate at which to paint the icon.
+   * @param	y	The Y coordinate at which to paint the icon.
+   * @param	w	The width of the scale dicon.
+   * @param	h	The height of the scaled icon.
+   */
+  public void paintIcon(Component c, Graphics g, int x, int y, int w, int h)
+  {
+    float xScale = (float)w / (float)(image.getWidth());
+    float yScale = (float)h / (float)(image.getHeight());
+
+    ParameterBlock pb = new ParameterBlock();
+    pb.addSource(image);
+    pb.add(xScale);
+    pb.add(yScale);
+    pb.add(0.0F);
+    pb.add(0.0F);
+    pb.add(new InterpolationNearest());
+    RenderedOp im = JAI.create("Scale", pb, null);
+    AffineTransform at = new AffineTransform();
+    at.translate((double)x, (double)y);
+    ((Graphics2D)g).drawRenderedImage(im, at);
+  }
+
+  /**
+   * Set the description of the image.  This is meant to be a brief
+   * textual description of the object.  For example, it might be
+   * presented to a blind user to give an indication of the purpose
+   * of the image.
+   * @param	description	The description of the image.
+   */
+  public void setDescription(String description)
+  {
+    this.description = description;
+  }
+
+  /**
+   * Set the image displayed by this icon.
+   * @param	image	The image to set.
+   */
+  public void setImage(Image img)
+  {
+    image = JAI.create("AWTImage", img);
+  }
+
+
+  /**
+   * Read the serialized state of the object.
+   * @param	s	The stream from which to read the state.
+   */
+  private void readObject(ObjectInputStream s)
+    throws ClassNotFoundException, IOException
+  {
+    MemoryCacheSeekableStream ms = new MemoryCacheSeekableStream(s);
+    image = JAI.create("Stream", ms);
+    try {
+      saveFormat = s.readInt();
+    } catch (IOException ioe) {
+      saveFormat = PNG;
+    }
+    try {
+      description = s.readUTF();
+      if (description == null) {
+        description = "";
+      }
+    } catch (IOException ioe) {
+    }
+  }
+
+  /**
+   * Serialize the object.
+   * @param	s	The stream to which to write the state.
+   * @exception	IOException	Thrown if writing fails.
+   */
+  private void writeObject(ObjectOutputStream s) throws IOException
+  {
+    saveImage(saveFormat, s);
+    s.writeInt(saveFormat);
+    if (description == null) {
+      description = "";
+    }
+    s.writeUTF(description);
+  }
+
+  /**
+   * Specifies what format will be used when serializing the object.
+   * @param	format		The format of the image: one of GIF, PNG,
+   *				JPEG, BMP.
+   * @exception	IllegalArgumentException	Thrown if an unknown format is
+   *				specified.
+   */
+  public void setSaveFormat(int format) throws IllegalArgumentException
+  {
+    switch (format) {
+      case GIF:
+      case JPEG:
+      case PNG:
+      case BMP:
+	saveFormat = format;
+	break;
+      default:
+	  throw new IllegalArgumentException("Unsupported format: " + format);
+    }
+  }
+
+  /**
+   * Saves the image of the NewRestorableImageIcon to a stream. This method can
+   * be used to create an image file in one of the supported formats.
+   * @param	format	The format of the image: one of GIF, PNG, JPEG, BMP.
+   * @param	s	The stream to which to save the image.
+   * @exception	IllegalArgumentException	Thrown if an
+   *				unsupported format is specified.
+   * @exception	IOException	Thrown if saving fails.
+   */
+  public void saveImage(int format, OutputStream s)
+    throws IllegalArgumentException, IOException
+  {
+    switch (format) {
+      case GIF:
+	// JAI does not suport writing GIF files!
+	Image img = image.getAsBufferedImage();
+	GifEncoder enc = new GifEncoder(img, s);
+	enc.encode();
+	break;
+      case JPEG:
+	JAI.create("Encode", image, s, "JPEG", null);
+	break;
+      case PNG:
+	JAI.create("Encode", image, s, "PNG", null);
+	break;
+      case BMP:
+	JAI.create("Encode", image, s, "BMP", null);
+	break;
+      default:
+	throw new IllegalArgumentException("Unsupported format: " + format);
+    }
+  }
+
+}

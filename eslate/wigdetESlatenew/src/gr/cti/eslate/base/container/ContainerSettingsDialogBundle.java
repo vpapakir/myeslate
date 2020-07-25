@@ -1,0 +1,72 @@
+package gr.cti.eslate.base.container;
+
+import java.util.ListResourceBundle;
+
+
+public class ContainerSettingsDialogBundle extends ListResourceBundle {
+    public Object [][] getContents() {
+        return contents;
+    }
+
+    static final Object[][] contents={
+        {"DialogTitle",         "E-Slate Options"},
+        {"OK",                  "OK"},
+        {"Cancel",              "Cancel"},
+        {"NameColumn",          "Name"},
+        {"ClassNameColumn",     "Class"},
+        {"AvailabilityColumn",  "Make Available"},
+        {"AddComponent",        "Add"},
+        {"RemoveComponent",     "Remove"},
+        {"EditComponent",       "Edit"},
+        {"InstalledComponents", "Installed Components"},
+        {"InstalledLookAndFeels", "Installed Look & Feels "},
+        {"SiteNameColumn",      "Name"},
+        {"WebSiteColumn",       "URL"},
+        {"CommonDirColumn",     "Common folder"},
+        {"SiteAvailabilityColumn",  "Make Available"},
+        {"AddSite",             "Add"},
+        {"RemoveSite",          "Remove"},
+        {"EditSite",            "Edit"},
+        {"WebSites",            "Web sites"},
+        {"PreloadFile",         "Microworld file"},
+        {"PreloadSite",         "Web site"},
+        {"PreloadMicroworld",   "Open microworld on start-up"},
+        {"ChooseMicroworldFile","Choose microworld file"},
+        {"Error",               "Error"},
+        {"SettingsDialogMsg1",  "There exists already an installed component named "},
+        {"SettingsDialogMsg2",  "Class "},
+        {"SettingsDialogMsg3",  " is already installed. It is associated to the component name "},
+        {"SettingsDialogMsg4",  "A web site named \""},
+        {"SettingsDialogMsg5",  "\" is already installed"},
+        {"SettingsDialogMsg6",  "Web site \""},
+        {"SettingsDialogMsg7",  "\" is already installed. It is associated with the name \""},
+        {"GeneralSettings",     "General settings"},
+        {"SoundSettings",       "Sound settings"},
+        {"SystemSounds",        "System sounds"},
+        {"DefaultSounds",       "Default values for microworld basic sounds"},
+        {"NewTheme",            "New"},
+        {"DeleteTheme",         "Remove"},
+        {"LoadTheme",           "Load"},
+        {"SaveThemeAs",         "Save As"},
+        {"NewThemeTip",         "New sound theme"},
+        {"DeleteThemeTip",      "Remove active sound theme from list"},
+        {"LoadThemeTip",        "Load sound theme"},
+        {"SaveThemeAsTip",      "Save active sound theme"},
+        {"SoundThemes",         "Sound themes"},
+        {"SoundMgmt",           "Sound management"},
+        {"Play",                "Play sound"},
+        {"Stop",                "Stop sound"},
+        {"Next",                "Next sound"},
+        {"Previous",            "Previous sound"},
+        {"Load",                "Load sound"},
+        {"Delete",              "Delete sound"},
+        {"SaveSoundThemeTitle", "Save sound theme"},
+        {"SaveSoundTheme",      "The edited sound theme has been changed. Do you want to save it?"},
+        {"Yes",                 "Yes"},
+        {"No",                  "No"},
+        {"Cancel",              "Cancel"},
+        {"SelectThemeFile",     "Select sound theme file"},
+        {"UnableToReadTheme",   "Unable to open sound theme \n\""},
+        {"UnableToCreateNewTheme", "Unable to create new sound theme \n\""},
+    };
+}

@@ -1,0 +1,61 @@
+package gr.cti.eslate.utils;
+
+import java.io.*;
+
+/**
+ * NRIinputStream .java
+ *
+ * @version
+ * @author      Kriton Kyrimis
+ */
+public class NRIInputStream extends ObjectInputStream
+{
+  private ObjectInputStream ois;
+  private final static int NBYTES = 22;
+  private int[] data = new int[NBYTES];
+  int currentByte = 0;
+  int totalBytes;
+
+  public NRIInputStream(ObjectInputStream s)
+  {
+    super();
+    ois = s;
+    try {
+      for (int i=0; i<NBYTES; i++) {
+        int n = ois.read();
+        if (n >= 0) {
+          data[totalBytes++] = n;
+        }else{
+          break;
+        }
+      }
+    }catch (IOException ioe) {
+      totalBytes = 0;
+    }
+  }
+
+  public int read() throws IOException
+  {
+    if (currentByte < totalBytes) {
+      return data[currentByte++];
+    }else{
+      return ois.read();
+    }
+  }
+
+  public boolean isNewRestorableImageIcon()
+  {
+    byte[] bytes = new byte[totalBytes];
+    for (int i=0; i<totalBytes; i++) {
+      bytes[i] = (byte)(data[i]);
+    }
+    String s = new String(bytes);
+    if (s.equals("NewRestorableImageIcon")) {
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  
+}

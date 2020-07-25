@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;amazon.prv.ppk&apos; to &apos;jupdown/src/test&apos;&#x0D;&#x0A;- Original project: &apos;jupdown&apos;&#x0D;&#x0A;- Destination element: &apos;jupdown/src/test&apos;&#x0D;&#x0A;- Original element: &apos;amazon.prv.ppk&apos;" description="Copy file" destination="/src&lt;test" element1="src/cl/amazon.prv.ppk" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1418298895246" units="0" version="1.0"/>
+</session>

@@ -1,0 +1,145 @@
+package gr.cti.eslate.navigator.suppliers; //14Jun2000: moved to package "suppliers"
+
+import java.awt.*;
+import javax.swing.*;
+
+import gr.cti.eslate.navigator.models.*;
+import gr.cti.eslate.utils.browser.*;
+import gr.cti.eslate.utils.browser.SWT.*;
+
+import org.eclipse.swt.browser.*;
+
+/**
+ * Navigator (web browser etc.) component for E-Slate
+ *
+ * @author      George Birbilis
+ * @author      Kriton Kyrimis
+ * @version     3.0.2, 31-Oct-2006
+ */
+public class SWTNavigator
+ extends JComponent
+ implements INavigator,
+            INavigatorEventSource, // 15Mar2000
+            LocationListener, StatusTextListener, TitleListener
+{
+  /**
+   * Serialization version.
+   */
+  final static long serialVersionUID = 1L;
+
+  private IEBrowser browser;
+  private INavigatorEventSink listener;
+
+  public SWTNavigator()
+  {
+    setLayout(new BorderLayout());
+
+    browser=new IEBrowser();
+    browser.addLocationListener(this);
+    browser.addStatusTextListener(this);
+    browser.addTitleListener(this);
+
+    add( (Component)browser, BorderLayout.CENTER );
+  }
+
+  // INavigator implementation
+
+  public void setCurrentLocation(String location) throws Exception
+  {
+    browser.setCurrentLocation(location);
+  }
+
+  public String getCurrentLocation()
+  {
+    return browser.getCurrentLocation();
+  }
+
+  public String home()
+  {
+    return browser.home();
+  }
+
+  public String forward()
+  {
+    return browser.forward();
+  }
+
+  public String back()
+  {
+    return browser.back();
+  }
+
+  public void stop()
+  {
+    browser.stop();
+  }
+
+  public void refresh()
+  {
+    browser.refresh();
+  }
+
+  public ESlateBrowser getESlateBrowser()
+  {
+    return browser;
+  }
+
+  // INavigatorEventSource implementation
+
+  public void setNavigatorEventSink(INavigatorEventSink eventSink)
+  {
+    listener = eventSink;
+  }
+
+
+  // LocationListener implementation
+
+  public void changing(LocationEvent event)
+  {
+    //System.out.println("SWTNavigator.BeforNavigate");
+    boolean cancel[] = new boolean[]{false};
+    if (listener != null) {
+      listener.beforeNavigation(
+        event.location, //URL
+        cancel
+      );
+    }
+    // test: should cancel the navigation: doesn't seem to work!
+    // (see beanXporter docs on callbacks)
+    //cancel[0] = true;
+    //event.getArguments()[5].getBooleanRefParameterValue().setBoolean(cancel[0]);
+  }
+
+  public void changed(LocationEvent event)
+  {
+    //System.out.println("SWTNavigator.NavigateComplete");
+    if (listener != null) {
+      listener.navigationComplete(
+        event.location //URL
+      );
+    }
+  }
+
+  // StatusTextListener implementation
+
+  public void changed(StatusTextEvent event)
+  {
+    if (listener != null) {
+      listener.statusTextChange(
+        event.text //status text
+      );
+    }
+  }
+
+  // TitleListener implementation
+
+  public void changed(TitleEvent event)
+  {
+    if (listener != null) {
+      listener.statusTextChange(
+        event.title //title
+      );
+    }
+  }
+
+}

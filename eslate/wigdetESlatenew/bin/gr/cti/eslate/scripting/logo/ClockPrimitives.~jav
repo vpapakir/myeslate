@@ -1,0 +1,344 @@
+package gr.cti.eslate.scripting.logo;
+
+import java.util.*;
+import virtuoso.logo.*;
+import gr.cti.eslate.logo.*;
+import gr.cti.eslate.scripting.*;
+import gr.cti.eslate.clock.*;
+import gr.cti.eslate.base.*;
+import gr.cti.eslate.utils.*;
+
+/**
+ * This class describes the Logo primitives implemented by the clock
+ * component.
+ *
+ * @author	Kriton Kyrimis
+ * @version	1.5.20, 10-Apr-2000
+ * @see	gr.cti.eslate.clock.Clock
+ */
+public class ClockPrimitives extends PrimitiveGroup
+{
+  /**
+   * Localized resources.
+   */
+  private static ResourceBundle resources = null;
+
+  /**
+   * Required for scripting.
+   */
+  MyMachine myMachine;
+
+  /**
+   * Register primitives.
+   */
+  protected void setup(Machine machine, Console console) throws SetupException {
+   if (resources == null) {
+      resources = ResourceBundle.getBundle("gr.cti.eslate.scripting.logo.ClockResource",ESlateMicroworld.getCurrentLocale());
+   }
+
+   myRegisterPrimitive("CLOCK.CLOCKTIME", "pCLOCKTIME", 0);
+   myRegisterPrimitive("CLOCK.SETCLOCKTIME", "pSETCLOCKTIME", 1);
+   myRegisterPrimitive("CLOCK.CLOCKDATE", "pCLOCKDATE", 0);
+   myRegisterPrimitive("CLOCK.SETCLOCKDATE", "pSETCLOCKDATE", 1);
+   myRegisterPrimitive("CLOCK.ISOPAQUE", "pISOPAQUE", 0);
+   myRegisterPrimitive("CLOCK.OPAQUE", "pOPAQUE", 0);
+   myRegisterPrimitive("CLOCK.NOTOPAQUE", "pNOTOPAQUE", 0);
+   myRegisterPrimitive("CLOCK.ANALOGAPPEARANCE", "pANALOGAPPEARANCE", 0);
+   myRegisterPrimitive("CLOCK.SETANALOGAPPEARANCE", "pSETANALOGAPPEARANCE", 0);
+   myRegisterPrimitive("CLOCK.SETDIGITALAPPEARANCE", "pSETDIGITALAPPEARANCE", 0);
+
+   myRegisterPrimitive("CLOCK.SETHOURS", "pSETHOURS", 1);
+   myRegisterPrimitive("CLOCK.SETMINUTES", "pSETMINUTES", 1);
+   myRegisterPrimitive("CLOCK.SETSECONDS", "pSETSECONDS", 1);
+   myRegisterPrimitive("CLOCK.HOURS", "pHOURS", 0);
+   myRegisterPrimitive("CLOCK.MINUTES", "pMINUTES", 0);
+   myRegisterPrimitive("CLOCK.SECONDS", "pSECONDS", 0);
+
+   myMachine = (MyMachine)machine;
+
+   if (console != null)
+      console.putSetupMessage("Loaded Clock primitives");
+
+   }
+
+   /**
+   * Set the current time to a given value.
+   */
+   public final LogoObject pSETCLOCKTIME(InterpEnviron env, LogoObject obj[])throws LanguageException {
+      testNumParams(obj, 1);
+      TimeCount t = new TimeCount(0,0,0);
+      int length = ((LogoList) obj[0]).length();
+      if (length < 1 || length > 3) {
+         t=null;
+      }
+      if (length > 0) {
+	      t.hour = ((LogoList) obj[0]).pickInPlace(0).toInteger();
+      }
+      if (length > 1) {
+	      t.min = ((LogoList) obj[0]).pickInPlace(1).toInteger();
+      }
+      if (length > 2) {
+	      t.sec = ((LogoList) obj[0]).pickInPlace(2).toInteger();
+      }
+      if (t == null) {
+         throw new LanguageException(resources.getString("badTime"));
+      }
+
+///    t = TimeParse.TimeParse(obj[0]);   REMEMBER TO CHECK WHY THE OLD WAY DOESN'T WORK
+
+      Vector v = myMachine.componentPrimitives.getComponentsToTell(gr.cti.eslate.scripting.AsClock.class);
+      for (int i=0; i<v.size(); i++) {
+         Clock clock = (Clock) v.elementAt(i);
+         clock.setTime(t);
+      }
+
+      return LogoVoid.obj;
+   }
+
+   /**
+   * Return the current time.
+   */
+   public final LogoObject pCLOCKTIME(InterpEnviron env, LogoObject obj[]) throws LanguageException {
+      testNumParams(obj, 0);
+
+      AsClock c = (AsClock)myMachine.componentPrimitives.getFirstComponentToTell(gr.cti.eslate.scripting.AsClock.class);
+      if (c == null)
+         throw new LanguageException("There is no Clock to TELL this to");
+
+      LogoObject lo[] = new LogoObject[3];
+      GregorianCalendar calendar = new GregorianCalendar();
+      calendar.setTime(c.getTime());
+      TimeCount t = new TimeCount(calendar.get(calendar.HOUR_OF_DAY),calendar.get(calendar.MINUTE),calendar.get(calendar.SECOND));//c.getTime();
+      //////////////////??????????????REMEMBER TO CORRECT THIS!
+
+      lo[0] = new LogoWord(t.hour);
+      lo[1] = new LogoWord(t.min);
+      lo[2] = new LogoWord(t.sec);
+//    lo[3] = new LogoWord(t.usec / 1000);
+      return new LogoList(lo);
+   }
+
+    public final LogoObject pISOPAQUE(InterpEnviron interpenviron, LogoObject[] aLogoObject) throws LanguageException {
+      testNumParams(aLogoObject, 0);
+
+      //AsClock clock = (AsClock)myMachine.componentPrimitives.getFirstComponentToTell(gr.cti.eslate.clock.Clock.class);
+      Clock clock = (Clock)myMachine.componentPrimitives.getFirstComponentToTell(gr.cti.eslate.clock.Clock.class);
+      if (clock == null)
+         throw new LanguageException("There is no Clock to TELL this to");
+
+      return new LogoWord(clock.isOpaque());
+   }
+
+   public final LogoObject pOPAQUE(InterpEnviron interpenviron, LogoObject[] aLogoObject) throws LanguageException {
+      testNumParams(aLogoObject, 0);
+
+      Vector v = myMachine.componentPrimitives.getComponentsToTell(gr.cti.eslate.clock.Clock.class);
+      for (int i=0; i<v.size(); i++) {
+         Clock clock = (Clock) v.elementAt(i);
+         clock.setOpaque(true);
+      }
+
+      return LogoVoid.obj;
+   }
+
+
+   public final LogoObject pNOTOPAQUE(InterpEnviron interpenviron, LogoObject[] aLogoObject) throws LanguageException {
+      testNumParams(aLogoObject, 0);
+
+      Vector v = myMachine.componentPrimitives.getComponentsToTell(gr.cti.eslate.clock.Clock.class);
+      for (int i=0; i<v.size(); i++) {
+         Clock clock = (Clock) v.elementAt(i);
+         clock.setOpaque(false);
+      }
+
+      return LogoVoid.obj;
+   }
+
+   public final LogoObject pANALOGAPPEARANCE(InterpEnviron interpenviron, LogoObject[] aLogoObject) throws LanguageException {
+      testNumParams(aLogoObject, 0);
+
+      Clock clock = (Clock) myMachine.componentPrimitives.getFirstComponentToTell(gr.cti.eslate.clock.Clock.class);
+      if (clock == null)
+         throw new LanguageException("There is no Clock to TELL this to");
+
+      return new LogoWord(clock.getAppearance());
+   }
+
+   public final LogoObject pSETANALOGAPPEARANCE(InterpEnviron interpenviron, LogoObject[] aLogoObject) throws LanguageException {
+      testNumParams(aLogoObject, 0);
+
+      Vector v = myMachine.componentPrimitives.getComponentsToTell(gr.cti.eslate.clock.Clock.class);
+      for (int i=0; i<v.size(); i++) {
+         Clock clock = (Clock) v.elementAt(i);
+         clock.setAppearance(true);
+      }
+
+      return LogoVoid.obj;
+   }
+
+   public final LogoObject pSETDIGITALAPPEARANCE(InterpEnviron interpenviron, LogoObject[] aLogoObject) throws LanguageException {
+      testNumParams(aLogoObject, 0);
+
+      Vector v=myMachine.componentPrimitives.getComponentsToTell(gr.cti.eslate.clock.Clock.class);
+      for (int i=0; i<v.size(); i++) {
+         Clock clock = (Clock) v.elementAt(i);
+         clock.setAppearance(false);
+      }
+
+      return LogoVoid.obj;
+   }
+
+   public final LogoObject pSETHOURS(InterpEnviron interpenviron, LogoObject[] aLogoObject) throws LanguageException {
+      testNumParams(aLogoObject, 1);
+      double hours = aLogoObject[0].toNumber();
+
+      Vector v=myMachine.componentPrimitives.getComponentsToTell(gr.cti.eslate.clock.Clock.class);
+      for (int i=0; i<v.size(); i++) {
+         Clock clock = (Clock) v.elementAt(i);
+         clock.setSeconds(hours*3600);
+      }
+
+      return LogoVoid.obj;
+   }
+
+   public final LogoObject pSETMINUTES(InterpEnviron interpenviron, LogoObject[] aLogoObject) throws LanguageException {
+      testNumParams(aLogoObject, 1);
+      double minutes = aLogoObject[0].toNumber();
+
+      Vector v=myMachine.componentPrimitives.getComponentsToTell(gr.cti.eslate.clock.Clock.class);
+      for (int i=0; i<v.size(); i++) {
+         Clock clock = (Clock) v.elementAt(i);
+         clock.setSeconds(minutes*60);
+      }
+
+      return LogoVoid.obj;
+   }
+
+   public final LogoObject pSETSECONDS(InterpEnviron interpenviron, LogoObject[] aLogoObject) throws LanguageException {
+      testNumParams(aLogoObject, 1);
+      double seconds = aLogoObject[0].toNumber();
+
+      Vector v=myMachine.componentPrimitives.getComponentsToTell(gr.cti.eslate.clock.Clock.class);
+      for (int i=0; i<v.size(); i++) {
+         Clock clock = (Clock) v.elementAt(i);
+         clock.setSeconds(seconds);
+      }
+
+      return LogoVoid.obj;
+   }
+
+   public final LogoObject pHOURS(InterpEnviron interpenviron, LogoObject[] aLogoObject) throws LanguageException {
+      testNumParams(aLogoObject, 0);
+
+      Clock clock = (Clock) myMachine.componentPrimitives.getFirstComponentToTell(gr.cti.eslate.clock.Clock.class);
+      if (clock == null)
+         throw new LanguageException("There is no Clock to TELL this to");
+
+      TimeCount time = new TimeCount(clock.currentGMT.hour,clock.currentGMT.min,clock.currentGMT.sec);
+      double seconds =(double)(time.hour * 3600 +time.min * 60 + time.sec);
+      double hours = seconds / (double) 3600;
+
+      return new LogoWord(hours);
+   }
+
+
+   public final LogoObject pMINUTES(InterpEnviron interpenviron, LogoObject[] aLogoObject) throws LanguageException {
+      testNumParams(aLogoObject, 0);
+
+      Clock clock = (Clock) myMachine.componentPrimitives.getFirstComponentToTell(gr.cti.eslate.clock.Clock.class);
+      if (clock == null)
+         throw new LanguageException("There is no Clock to TELL this to");
+
+      TimeCount time = new TimeCount(clock.currentGMT.hour,clock.currentGMT.min,clock.currentGMT.sec);
+      double seconds =(double)(time.hour * 3600 +time.min * 60 + time.sec);
+      double mins = seconds / (double) 60;
+      double hours = seconds / (double) 3600;
+
+      return new LogoWord(mins);
+   }
+
+
+   public final LogoObject pSECONDS(InterpEnviron interpenviron, LogoObject[] aLogoObject) throws LanguageException {
+      testNumParams(aLogoObject, 0);
+
+      Clock clock = (Clock) myMachine.componentPrimitives.getFirstComponentToTell(gr.cti.eslate.clock.Clock.class);
+      if (clock == null)
+         throw new LanguageException("There is no Clock to TELL this to");
+
+      TimeCount time = new TimeCount(clock.currentGMT.hour,clock.currentGMT.min,clock.currentGMT.sec);
+      double seconds =(double)(time.hour * 3600 +time.min * 60 + time.sec);
+
+      return new LogoWord(seconds);
+
+   }
+
+   public final LogoObject pSETCLOCKDATE(InterpEnviron env, LogoObject obj[]) throws LanguageException{
+      testNumParams(obj, 1);
+      Date d = new Date();
+      GregorianCalendar c = new GregorianCalendar();
+      int length = ((LogoList) obj[0]).length();
+      if (length < 1 || length > 3) {
+         c=null;
+      }
+      if (length > 0) {
+	      c.set(c.DAY_OF_MONTH,((LogoList) obj[0]).pickInPlace(0).toInteger());
+      }
+      if (length > 1) {
+	      c.set(c.MONTH,((LogoList) obj[0]).pickInPlace(1).toInteger()-1);
+      }
+      if (length > 2) {
+	   c.set(c.YEAR,((LogoList) obj[0]).pickInPlace(2).toInteger());
+      }
+      if (c == null) {
+         throw new LanguageException(resources.getString("badDate"));
+      }
+      else {
+         Vector v=myMachine.componentPrimitives.getComponentsToTell(gr.cti.eslate.clock.Clock.class);
+         for (int i=0; i<v.size(); i++) {
+            Clock clock = (Clock) v.elementAt(i);
+            clock.setDate(c.getTime());
+         }
+      }
+
+      return LogoVoid.obj;
+   }
+
+   /**
+   * Return the current time.
+   */
+   public final LogoObject pCLOCKDATE(InterpEnviron env, LogoObject obj[]) throws LanguageException{
+      testNumParams(obj, 0);
+
+      Clock clock= (Clock) myMachine.componentPrimitives.getFirstComponentToTell(gr.cti.eslate.clock.Clock.class);
+      if (clock == null)
+         throw new LanguageException("There is no Clock to TELL this to");
+
+      LogoObject lo[] = new LogoObject[3];
+      GregorianCalendar calendar = new GregorianCalendar();
+      calendar.setTime(clock.getDate());
+      TimeCount t = new TimeCount(calendar.get(calendar.HOUR_OF_DAY),calendar.get(calendar.MINUTE),calendar.get(calendar.SECOND));//c.getTime();
+
+      lo[0] = new LogoWord(calendar.get(calendar.DAY_OF_MONTH));
+      lo[1] = new LogoWord(calendar.get(calendar.MONTH)+1);
+      lo[2] = new LogoWord(calendar.get(calendar.YEAR));
+//    lo[3] = new LogoWord(t.usec / 1000);
+      return new LogoList(lo);
+  }
+
+   /**
+   * Register a LOGO primitive using both a default english name and
+   * a localized name.
+   * @param     pName   The name of the primitive.
+   * @param     method  The name of the method implementing the primitive.
+   * @param     nArgs   The number of arguments of the method implementing the
+   *                    primitive.
+   */
+   private void myRegisterPrimitive(String pName, String method, int nArgs) throws SetupException {
+      // Register localized primitive name.
+      registerPrimitive(resources.getString(pName), method, nArgs);
+      // Register default english primitive name.
+      if (!ESlateMicroworld.getCurrentLocale().getLanguage().equals("en")) {
+         registerPrimitive(pName, method, nArgs);
+      }
+   }
+}

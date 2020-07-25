@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="jar" name='start'>
+
+<property name='src' value='src' />
+<property name='bin' value='bin' />
+
+<property name='jarfile' value ='${ant.project.name}.jar'/>
+
+<property name='dest' value = '../start' />
+
+<property name='cbookif.classes' value='../cbookif/bin' />
+<property name='cbookeditor.classes' value='../CBookEditor/bin' />
+<property name='widgetsample.classes' value='../widgetsample/bin' />
+
+<target name='clean'>
+	<delete>
+		<fileset dir="${bin}">
+			<include name='**/*' />
+		</fileset>
+	</delete>
+</target>
+
+<target name='init'>
+	<path id='compile.path' >
+		<pathelement location='${cbookif.classes}' />
+		<pathelement location='${cbookeditor.classes}' />
+		<pathelement location='${widgetsample.classes}' />
+		<pathelement location="lib/mayscript.jar" />
+	</path>
+	<mkdir dir='${bin}' />
+</target>
+
+<target name='resources' depends='init'>
+	<copy failonerror='false'
+		todir="${bin}"
+	>
+		<fileset dir="${src}" excludes="**/*.java" />
+	</copy>
+
+</target>
+
+<target name='compile' depends='init' >
+		<property name='source-level' value='1.6' />
+		<property name='target-level' value='1.6' />
+		<property name='encoding' value='UTF-8' />
+		<javac
+			target="${target-level}"
+			source="${source-level}"
+			encoding="${encoding}"
+			destdir="${bin}"
+			srcdir="${src}"
+		>
+		<classpath>
+			<path refid='compile.path' />
+		</classpath>
+		</javac>
+</target>
+
+<target name='jar' depends='compile,resources'>
+	<jar
+		destfile='${jarfile}'
+		duplicate='preserve'
+	>
+		<fileset dir='${bin}' />
+	</jar>
+</target>
+
+<target name='install' depends='jar' >
+	<jar
+		destfile='${jarfile}'
+		duplicate='preserve'
+	>
+		<fileset dir='${bin}' />
+	</jar>
+</target>
+	
+</project>

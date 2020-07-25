@@ -1,0 +1,239 @@
+package gr.cti.eSlate.planar;
+
+import javax.swing.*;
+import gr.cti.eSlate.sharedObject.VectorData;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+
+public class PlotPanel extends JComponent
+{
+    public int mode;
+    public final int MODE_EDIT=0;
+    public final int MODE_SELECT=1;
+
+    public final Color COLOR_AXIS=Color.orange;
+    public final Color COLOR_LINE=Color.black;
+    public final Color COLOR_POINT=Color.red;
+    public final Color COLOR_CURRENT=Color.blue;
+
+    //////////////////////////////////////
+
+    public class Selection extends JComponent{
+     public Selection(int x,int y,int width,int height){
+      super();
+      setBounds(x,y,width,height);
+     }
+     public void setEndPoint(int x,int y){ //this is called by ListenerMouseMotion when dragging to select
+      int width=Math.abs(x-getX())+1;
+      int height=Math.abs(y-getY())+1;
+      x=Math.min(x,getX());
+      y=Math.min(y,getY());
+      setBounds(x,y,width,height);
+      System.out.println(getBounds());
+      setSelection(getBounds()); //select the Points
+     }
+     public void paintComponent(Graphics g){
+      g=getComponentGraphics(g); //it will set our fg and bg colors
+      g.drawRect(0,0,getWidth()-1,getHeight()-1);
+     }
+    }
+
+    public Selection selectionArea=new Selection(0,0,0,0);
+
+    ////////////
+
+    class ListenerMouse extends MouseAdapter{
+     public void mousePressed(MouseEvent e){
+      selectionArea.setBounds(e.getX(),e.getY(),0,0);
+      add(selectionArea);
+     }
+     public void mouseClicked(MouseEvent e){
+      //System.out.println("Mouse Clicked");
+      if (SwingUtilities.isRightMouseButton(e)) //if right click, then remove selection
+       remove(selectionArea);
+      else
+       newPoint(e.getX(), e.getY());          //if left click, then add a new point
+     }
+    }
+
+    class ListenerMouseMotion extends MouseMotionAdapter{
+     public void mouseDragged(MouseEvent e){
+      //System.out.println("Mouse Dragged");
+      int x=e.getX();
+      int y=e.getY();
+      if (mode==MODE_SELECT)
+       selectionArea.setEndPoint(x,y); //[show drag outline (XORed)]
+       else
+        if (SwingUtilities.isLeftMouseButton(e)) newPoint(x,y);
+        else selectionArea.setEndPoint(x,y); //[show drag outline (XORed)]
+     }
+    }
+
+    //////////
+
+    class PointSelector extends MouseAdapter{ //setting this as a listener to each point we make
+     public void mousePressed(MouseEvent e){ //use this instead of MouseClicked, should fix some bug where PlotPanel seems to get some drags instead of our component
+      //System.out.println("Selected a point!");
+      setCurrentPoint((PlotPoint)e.getSource());
+     }
+    }
+
+    PointSelector pointSelector=new PointSelector();
+
+    //////////////////////////////////////
+
+    public PlotPanel(VectorData v)
+    {
+        vect = v;
+        setLayout(null);
+        //setDoubleBuffered(true);
+        addMouseListener(new ListenerMouse());
+        addMouseMotionListener(new ListenerMouseMotion());
+    }
+
+    Point mapPoint(int x, int y)
+    {
+     return new Point(Math.round(x-getWidth()/2), Math.round(getHeight()/2-y));
+    }
+
+    Point mapPointR(double x, double y)
+    {
+     return new Point((int)Math.round(getWidth()/2+x), (int)Math.round(getHeight()/2-y));
+    }
+
+    public void addPoint(int x, int y, PlotPoint p)
+    {
+        add(p);
+        p.setLocation(x, y);
+        p.addMouseListener(pointSelector);
+    }
+
+    public void newVectorData(){
+     if (curPoint!=null) curPoint.setPosition(vect.getX(),vect.getY());
+    }
+
+    public void paintConnections(Graphics g)
+    {
+        //System.out.println("PlotPanel:paintConnections");
+        g.setColor(COLOR_LINE); //17-2-1999: now setting our own color and not using any already set (was in fact using the one set by paintAxis)
+        for(int i = getComponentCount() - 1; i >=0; --i)
+        {
+            Component c= getComponent(i);
+            if (c instanceof PlotPoint)
+            {
+               PlotPoint p = (PlotPoint)c;
+               PlotPoint next = p.next;
+               if(next != null)
+                 g.drawLine(p.getCenterX(), p.getCenterY(), next.getCenterX(), next.getCenterY());
+            }
+        }
+
+    }
+
+    public void paintAxis(Graphics g)
+    {
+        //System.out.println("PlotPanel:paintAxis");
+        g.setColor(COLOR_AXIS); //17-2-1999
+        g.drawLine(getWidth() / 2, 0, getWidth() / 2, getHeight());
+        g.drawLine(0, getHeight() / 2, getWidth(), getHeight() / 2);
+    }
+
+    public void paintComponent(Graphics g)
+    {
+        //System.out.println("PlotPanel:paintComponent");
+        paintAxis(g);
+        paintConnections(g);
+    }
+
+    void newPoint(int x, int y)
+    {
+      synchronized(getTreeLock()){ //useful?
+        PlotPoint p = new PlotPoint(mapPoint(x, y));
+        if(lastPoint != null) //using lastPoint and not curPoint here, so that we generate a single connected line and not a graph (using curPoint in this block allows one to make graphs)
+         lastPoint.setNext(p); //this sets a two-directional link between "lastPoint" and "p" 
+        lastPoint=p; //keep last added point
+        addPoint(x, y, p); //this must be after the previous link setting, so that the new point draws a line to its previous point
+        setCurrentPoint(p);
+        vect.setVectorData(p.pos.x, p.pos.y);
+      }
+    }
+
+    public void setCurrentPoint(PlotPoint p){ //12-2-1999
+     if (curPoint!=null) curPoint.setForeground(COLOR_POINT); //17-2-1999: show that last selected point is no longer selected
+     curPoint=p;
+     if (curPoint!=null) curPoint.setForeground(COLOR_CURRENT); //change the color of the newly selected point
+     vect.setVectorData(curPoint.pos.x, curPoint.pos.y); //17-2-1999: selecting a point sends its data to the slider
+    }
+
+    public void remove(PlotPoint c){ //18-2-1999: when removing a point, remove any links to it from other Points
+     PlotPoint t;
+
+     t=c.previous;                 //remove link from previous point (if any)
+     if (t!=null) t.next=null;
+
+     t=c.next;                     //remove link from next point (if any)
+     if (t!=null) t.previous=null;
+    }
+
+    //////////////
+
+
+    Vector selection=new Vector();
+    Vector clipboard=new Vector();
+
+    public void selectAll(){
+     selectionArea.setBounds(new Rectangle(new Point(0,0),getSize()));
+    }
+
+    public void setSelection(Rectangle area){
+     selection.removeAllElements(); //to remove old ones that were selected
+     Component[] children=getComponents();
+     if (children!=null) //check, cause we might have no PlotPoints added yet
+      for (int i=0;i<children.length;i++){
+       Component c=children[i];
+       if (c instanceof PlotPoint && area.intersects(c.getBounds())) selection.addElement(c);
+      }
+     //repaint(); //do a refresh (to show the elements as selected - or maybe add a setSelected method on the compos to make them get appropriate color)
+    }
+
+    /////////
+
+    public void paste(){ //Paste points by inserting at curPoint
+     for(int i=0;i<selection.size();i++){
+      add((PlotPoint)clipboard.elementAt(i)); //(1)add to display
+      }
+     if (curPoint!=null)              //(2)connect to curPoint
+      curPoint.setNext((PlotPoint)clipboard.elementAt(0)); //links in both directions
+     repaint(); //do a refresh
+    }
+
+    public void copy(){ //Copy selected points to clipboard (don't sort them)
+     clipboard=(Vector)selection.clone(); //(1)make a copy of the selection's contents to the clipboard
+    }
+
+    public void cut(){ //Cut selected points to clipboard
+     copy();  //(1)copy to clipboard
+     clear(); //(2)clear from display (and from selection)
+    }
+
+    ////////
+
+    public void clear(){ //remove selected points from planar (and from selection)
+     for(int i=0;i<selection.size();i++) //the remove proc must remove the links to this Point from other points as well
+      remove((PlotPoint)selection.elementAt(i)); //(1)remove from display
+     selection.removeAllElements();      //(2)remove from selection
+     repaint(); //do a refresh
+    }
+
+    public void clearAll(){ //remove all points from planar (and from selection)
+     selectAll();
+     clear();
+    }
+
+    //////////////
+
+    /*private*/ VectorData vect;
+    private PlotPoint lastPoint,curPoint;
+}
+

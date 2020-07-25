@@ -1,0 +1,72 @@
+package gr.cti.eslate.base.container;
+
+import java.util.ListResourceBundle;
+
+
+public class ContainerSettingsDialogBundle_el_GR extends ListResourceBundle {
+    public Object [][] getContents() {
+        return contents;
+    }
+
+    static final Object[][] contents={
+        {"DialogTitle",         "Ρυθμίσεις Αβακίου"},
+        {"OK",                  "Εντάξει"},
+        {"Cancel",              "Άκυρο"},
+        {"NameColumn",          "Όνομα"},
+        {"ClassNameColumn",     "Κλάση"},
+        {"AvailabilityColumn",  "Διαθέσιμη"},
+        {"AddComponent",        "Προσθήκη"},
+        {"RemoveComponent",     "Αφαίρεση"},
+        {"EditComponent",       "Ενημέρωση"},
+        {"InstalledComponents", "Εγκατεστημένες ψηφίδες"},
+        {"InstalledLookAndFeels", "Εγκατεστημένα θέματα περιβάλλοντος"},
+        {"SiteNameColumn",      "Όνομα"},
+        {"WebSiteColumn",       "Διεύθυνση"},
+        {"CommonDirColumn",     "Κοινός χώρος"},
+        {"SiteAvailabilityColumn",  "Διαθέσιμος"},
+        {"AddSite",             "Προσθήκη"},
+        {"RemoveSite",          "Αφαίρεση"},
+        {"EditSite",            "Ενημέρωση"},
+        {"WebSites",            "Δικτυακοί τόποι"},
+        {"PreloadSite",         "Δικτυακός τόπος"},
+        {"PreloadFile",         "Αρχείο μικρόκοσμου"},
+        {"PreloadMicroworld",   "Άνοιγμα μικρόκοσμου κατά την έναρξη της εφαρμογής"},
+        {"ChooseMicroworldFile","Επιλογή αρχείου μικρόκοσμου"},
+        {"Error",               "Λάθος"},
+        {"SettingsDialogMsg1",  "Υπάρχει ήδη εγκατεστημένη ψηφίδα με το όνομα "},
+        {"SettingsDialogMsg2",  "Η κλάση "},
+        {"SettingsDialogMsg3",  " είναι ήδη εγκατεστημένη. Αναφέρεται σε αυτή το όνομα ψηφίδας "},
+        {"SettingsDialogMsg4",  "Υπάρχει δικτυακός τόπος με όνομα \""},
+        {"SettingsDialogMsg5",  "\" ήδη εγκατεστημένος"},
+        {"SettingsDialogMsg6",  "Ο δικτυακός τόπος \""},
+        {"SettingsDialogMsg7",  "\" είναι ήδη εγκατεστημένος με το όνομα \""},
+        {"GeneralSettings",     "Γενικές ρυθμίσεις"},
+        {"SoundSettings",       "Ρυθμίσεις ήχων"},
+        {"SystemSounds",        "Ήχοι συστήματος"},
+        {"DefaultSounds",       "Αρχικές τιμές των βασικών ήχων μικρόκοσμου"},
+        {"NewTheme",            "Νέο"},
+        {"DeleteTheme",         "Αφαίρεση"},
+        {"LoadTheme",           "Άνοιγμα"},
+        {"SaveThemeAs",         "Αποθήκευση ως"},
+        {"NewThemeTip",         "Νέο θέμα ήχων"},
+        {"DeleteThemeTip",      "Αφαίρεση ενεργού θέματος ήχων από τη λίστα"},
+        {"LoadThemeTip",        "Άνοιγμα θέματος ήχων"},
+        {"SaveThemeAsTip",      "Αποθήκευση ενεργού θέματος ήχων"},
+        {"SoundThemes",         "Θέματα ήχων"},
+        {"SoundMgmt",           "Διαχείριση ήχου"},
+        {"Play",                "Παίξιμο ήχου"},
+        {"Stop",                "Σταμάτημα ήχου"},
+        {"Next",                "Επόμενος ήχος"},
+        {"Previous",            "Προηγούμενος ήχος"},
+        {"Load",                "Άνοιγμα ήχου"},
+        {"Delete",              "Διαγραφή ήχου"},
+        {"SaveSoundThemeTitle", "Αποθήκευση θέματος ήχων"},
+        {"SaveSoundTheme",      "Το παρόν θέμα ήχων έχει μεταβληθεί. Θέλετε να αποθηκευτούν οι αλλαγές;"},
+        {"Yes",                 "Ναι"},
+        {"No",                  "Όχι"},
+        {"Cancel",              "Άκυρο"},
+        {"SelectThemeFile",     "Επιλογή αρχείου θέματος ήχων"},
+        {"UnableToReadTheme",   "Δεν στάθηκε δυνατή η ανάγνωση του αρχείου θέματος ήχων \n\""},
+        {"UnableToCreateNewTheme", "Δεν στάθηκε δυνατή η δημιουργία του νέου θέματος ήχων \n\""},
+    };
+}

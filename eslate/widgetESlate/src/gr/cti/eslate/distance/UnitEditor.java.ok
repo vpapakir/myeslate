@@ -1,0 +1,165 @@
+package gr.cti.eslate.distance;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.*;
+import java.util.*;
+import javax.swing.*;
+
+import gr.cti.eslate.base.*;
+import gr.cti.eslate.utils.*;
+
+/**
+ * Custom editor for the Distance component's "unit" property.
+ *
+ * @author	Kriton Kyrimis
+ * @version	1.5.20, 4-Apr-2000.
+ */
+public class UnitEditor extends PropertyEditorSupport
+{
+  /**
+   * The combo box used to edit the "units" property.
+   */
+  private JComboBox cbox;
+  /**
+   * The permissible units.
+   */
+  private String[] units;
+  /**
+   * Localized resources.
+   */
+  private ResourceBundle resources;
+  /**
+   * Property change support.
+   */
+  private PropertyChangeSupport pcs;
+
+  /**
+   * Construct the custom editor.
+   */
+  public UnitEditor()
+  {
+    super();
+    System.out.println("Entering UnitEditor constructor");
+    units = new Distance().getUnits();
+    resources = ResourceBundle.getBundle(
+      "gr.cti.eslate.distance.DistanceResource",
+      ESlateMicroworld.getCurrentLocale()
+    );
+    pcs = new PropertyChangeSupport(this);
+    cbox = new JComboBox();
+    for (int i=0; i<units.length; i++) {
+      cbox.addItem(units[i]);
+    }
+    cbox.setEditable(false);
+    cbox.addActionListener(new ActionListener(){
+      public void actionPerformed(ActionEvent e) {
+        setAsText(getAsText());
+      }
+    });
+    System.out.println("UnitEditor constructor OK");
+  }
+
+  /**
+   * Return an array of the allowable units.
+   * @return	The requested array.
+   */
+  //public String[] getTags()
+  //{
+    //System.out.println("Entering getTags");
+    //return units;
+  //}
+
+  /**
+   * Determines whether the propertyEditor can provide a custom editor.
+   * @return	True.
+   */
+  public boolean supportsCustomEditor()
+  {
+    System.out.println("Entering supportsCustomEditor");
+    return true;
+  }
+
+  /**
+   * A combo box that can be used to edit the "unit" property.
+   * @return	The requested combo box.
+   */
+  public Component getCustomEditor()
+  {
+    System.out.println("Entering getCustomEditor");
+    return cbox;
+  }
+
+  /**
+   * Gets the value of the property.
+   * @return	The requested value.
+   */
+  public Object getValue()
+  {
+    System.out.println("Entering getValue");
+    return getAsText();
+  }
+
+  /**
+   * Set (or change) the object that is to be edited.
+   * @param	value The new target object to be edited.
+   */
+  public void setValue(Object value)
+  {
+    System.out.println("Entering setValue");
+    setAsText("" + value);
+  }
+
+  /**
+   * Sets the property value by parsing a given String.
+   * @param	text	The string to be parsed.
+   * @exception	IllegalArgumentException	Thrown if either the String is
+   *			badly formatted or if this kind of property can't be
+   *			expressed as text.
+   */
+  public void setAsText(String text) throws IllegalArgumentException
+  {
+    System.out.println("Entering setAsText");
+    for (int i=0; i<units.length; i++) {
+      if (ESlateStrings.areEqualIgnoreCase(
+	    units[i], text, ESlateMicroworld.getCurrentLocale())){
+	String oldUnit = getAsText();
+        cbox.setSelectedIndex(i);
+	System.out.println("firePropertyChange(\"unit\", "+oldUnit+", "+units[i]+")");
+	pcs.firePropertyChange("unit", oldUnit, units[i]);
+	return;
+      }
+    }
+    throw new IllegalArgumentException(resources.getString("badUnit"));
+  }
+
+  /**
+   * Gets the property value as a string suitable for presentation to a human
+   * to edit.
+   * @return	The requested value.
+   */
+  public String getAsText()
+  {
+    System.out.println("Entering getAsText");
+    return (String)(cbox.getSelectedItem());
+  }
+
+  public synchronized void addPropertyChangeListener(PropertyChangeListener l)
+  {
+    System.out.println("addPropertyChangeListener " + l);
+    pcs.addPropertyChangeListener(l);
+  }
+
+  public synchronized void
+    removePropertyChangeListener(PropertyChangeListener l)
+  {
+    System.out.println("removePropertyChangeListener " + l);
+    pcs.removePropertyChangeListener(l);
+  }
+
+  public void firePropertyChange()
+  {
+    System.out.println("firePropertyChange");
+  }
+
+}

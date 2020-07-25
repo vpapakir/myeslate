@@ -1,0 +1,584 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="Author" content="George Tsironis">
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+<title>Database component</title>
+</head>
+
+<body>
+
+<h2>DATABASE COMPONENT</h2>
+
+<h4><font size="4">1. Introduction</font></h4>
+
+<p>This document is a brief introduction to the Database component. Although it's far from
+a thorough and complete manual, it will provide the user with the basic knowledge required
+to start using the Database component. </p>
+
+<p>This component provides the functionality of a simple, common, desktop DBMS. It is used
+to create manipulate and store individual tables or collection of database tables.
+However, unlike the common DBMSs, it has no form creation or report generation
+capabilities. The query mechanism of the DBMS is provided as second autonomous component,
+which will be able to co-operate with the database component, effectively adding querying
+capabilities to it. </p>
+
+<p>The database component creates and stores databases. A database is a collection of
+tables. These tables may have been created inside the database itself, or they may have
+been loaded from some other database. There exist no dependencies among the tables in a
+database, even if some of them are the result of operations (e.g. Join) applied on other
+tables of the same database. So a database is just the container for a group of tables,
+which are completely independent entities. A table can belong to more than one databases
+or can be moved from one database to another. </p>
+
+<h4><font size="4">2. General description</font></h4>
+
+<p>Each database is stored in a single file, which gets the default extension <i>'.cdb'</i>.
+Also the database has a title which is a distinct attribute from the name of the file in
+which it is stored. The user can exploit the advantage of being able to use a much more
+expressive title than a file name. However, if having a different title from the name of
+the storage file is incomprehensible for the user, then the Database component effectively
+fuses these distinct database attributes, to the point that the user may never have to
+realize the distinction. </p>
+
+<p>The above apply to the database tables, too. A table is stored in a single file file,
+which gets the default extension <i>'.ctb'</i>. The title of the table may be different
+from its file name. When a database is restored from its file, it restores each one of the
+tables it contains from their respective files. These files may reside anywhere on the
+file system of the user machine. However, it is advisable that some short of logical
+scheme is followed in storing a database and its tables, e.g. keep the table files of each
+database in the same directory, which differs from database to database. To move a
+database among different machines, both its file and the files of the tables it contains
+have to be moved. If in the target machine the database's tables are stored under a
+different path from the one they used to be, then the database will not be able to locate
+them in order to open them and it will prompt the user to find them. </p>
+
+<p>The database table stores entities in the form of records. The table also has fields.
+Each entity may or may not have a value for each of the fields of the table. Each field
+has a data type, which represents the type of data that can be stored in it. Currently
+there are seven data types supported. These are: 
+
+<ul>
+  <li>Number <img src="images/integer.gif" width="39" height="24"></li>
+  <li>Alphanumeric <img src="images/string.gif" width="42" height="24"></li>
+  <li>Boolean (Yes/No) <img src="images/boolean.gif" width="33" height="24"></li>
+  <li>Date <img src="images/date.gif" width="26" height="24"></li>
+  <li>Time <img src="images/time.gif" width="23" height="24"></li>
+  <li>URL (Universal Resource Locator) <img src="images/url.gif" width="43" height="24"></li>
+  <li>Image <img src="images/image.gif" width="29" height="24"></li>
+</ul>
+
+<p>The icons diplayed next to each data type are special icons, which denote each specific
+type. These icons are present when the user selects the data type of a field and are part
+of the fields' headers in the table.</p>
+
+<p>A table may have a key. The term 'key' refers to a field, for which all the records of
+the table have a value. These values must be unique for each record. In other words the
+values of a key field must be unique for each record in the table and none of these values
+can be null. Moreover a table may have a composite key, i.e. the key is formed by two or
+more fields in the table. The combination of values in these fields must be unique for
+each record. The special icon <img src="images\key.gif" width="23" height="10"> in the
+header of a field is used to denote its participation in the key of the table.</p>
+
+<p align="left">A table may also contain calculated fields. These are fields whose values
+are calculated based on a formula, in which other fields may participate. For example
+suppose that we have a table where the items sold in a store are kept. This table contains
+four fields: ITEM_NAME, ITEM_CODE, PRICE and DISCOUNT_PERCENTAGE, which refer to the name
+of an item, its code, its price and the discount percentage for the item during the sales
+period, respectively. The data type of the first field is <i>Aphanumeric, </i>while the
+rest of the fields are of<i> Number </i>type. To calculate the price at which each item in
+the store is sold during the sales, we introduce a new calculated field named
+DISCOUNT_PRICE. For this field we enter the formula: </p>
+
+<p align="center">[PRICE] - ([PRICE] * [DISCOUNT_PERCENTAGE] / 100)&nbsp;&nbsp; <i>(1)</i>
+</p>
+
+<p align="left">which yields the price at which each item in the store is sold during the
+sales period. </p>
+
+<p>The data type of the calculated field is not determined by the user, like for the other
+fields. It is determined automatically based on the formula. In the above example the
+DISCOUNT_PRICE field will be of <i>Number</i> type. Also the calculated fields are not
+editable. This means that the user cannot change their values. The only way to do this is
+to change the values of the fields on which the calculated field depends, or to change its
+formula. </p>
+
+<p>Let's take a deeper look at the formulas of the calculated fields. A formula may
+contain: 
+
+<ol>
+  <li>A single value of any of the supported data types, in which case all the cells of this
+    field are set to this value.</li>
+  <li>The name of a single field in the database. Whenever the user wants to include a field
+    in a formula, its name must be included in square brackets (See (1), above). In this case
+    the values of the calculated field are set to the values of the field on which it depends.</li>
+  <li>An expression which contains both field references and constant values. Such a formula
+    is the one used in the example above.</li>
+  <li>An expression which contains constants of any data type. In this case the expression
+    will be evaluated to a constant value and all the cells of the calculated field will be
+    set to this. Examples of such expressions are:</li>
+</ol>
+
+<ul type="circle">
+  <li>120 * ((33 / 2) $ 5)&nbsp;&nbsp;&nbsp; <i>($ is the exponentiation symbol)</i></li>
+  <li>&quot;Mike &quot; + Oldfield</li>
+  <li>true or (false and true)</li>
+  <li>1/2/1998 - 1/1/1900</li>
+</ul>
+
+<p>The composite formulas of type <i>3</i> and <i>4</i> do not accept any combination of
+fields and/or constant values. For example adding an <em>Alphanumeric</em> field to an <em>Number</em>
+field is invalid an no formula which contains such a calculation will be accepted. On the
+other hand, adding an <em>Number</em> field to and <em>Alphanumeric</em> field/constant
+makes sense, since the numeric value is treated as a string and concatenation is
+performed. </p>
+
+<p align="left">You may have also noticed that the operators (e.g. '+', '-', '*', 'and'
+...) used in calculated field formulas represent different operations depending on the
+type of the operands they act upon. For example '+' performs addition, when applied to
+numeric values, while it performs concatenation, when applied to <em>Aplhanumeric</em>
+values. Further more each data type accepts its own set of operands. For example '+' can
+be used with numeric values, but not with dates, because simply two dates cannot be added.
+The valid operators for each data type and the acceptable types of the second operand are:</p>
+
+<p align="left"><strong><u>Number</u></strong><em> </em></p>
+
+<ul type="disc">
+  <li><p align="left"><em>Valid operatos:</em><strong> +, -, *, /, $</strong> </p>
+  </li>
+  <li><p align="left"><em>Second operand data type: </em><strong>Number</strong></p>
+  </li>
+</ul>
+
+<p align="left"><strong><u>Alphanumeric</u></strong><em> </em></p>
+
+<ul type="disc">
+  <li><p align="left"><em>Valid operatos:</em><strong> +</strong></p>
+  </li>
+  <li><p align="left"><em>Second operand data type: </em><strong>Number,&nbsp; Alphanumeric,
+    Boolean,&nbsp; Date, Time, URL </strong></p>
+  </li>
+</ul>
+
+<p align="left"><strong><u>Boolean (Yes/No)</u></strong></p>
+
+<ul type="disc">
+  <li><p align="left"><em>Valid operatos:</em><strong> not, and, or </strong></p>
+  </li>
+  <li><p align="left"><em>Second operand data type: </em><strong>Boolean</strong></p>
+  </li>
+</ul>
+
+<p align="left"><strong><u>Date</u></strong><em> </em></p>
+
+<ul type="disc">
+  <li><p align="left"><em>Valid operatos:</em><strong> </strong>-, +</p>
+  </li>
+  <li><p align="left"><em>Second operand data type: </em><strong>Date, Number</strong></p>
+  </li>
+</ul>
+
+<p align="left"><strong><u>Time</u></strong><em> </em></p>
+
+<ul type="disc">
+  <li><p align="left"><em>Valid operatos:</em><strong> </strong>-, +</p>
+  </li>
+  <li><p align="left"><em>Second operand data type: </em><strong>Time</strong><em>, </em><strong>Number</strong></p>
+  </li>
+</ul>
+
+<p align="left"><strong><u>URL</u></strong><em> </em></p>
+
+<ul type="disc">
+  <li><p align="left"><em>Valid operatos:</em><strong> +</strong> </p>
+  </li>
+  <li><p align="left"><em>Second operand data type: </em><strong>Alphanumeric, URL</strong></p>
+  </li>
+</ul>
+
+<p align="left"><strong><u>Image</u></strong><em> </em></p>
+
+<ul type="disc">
+  <li><p align="left"><em>Valid operatos:</em><strong> None</strong></p>
+  </li>
+  <li><p align="left"><em>Second operand data type: </em><strong>None</strong></p>
+  </li>
+</ul>
+
+<p align="left">Formulas which contain <em>Date</em> and <em>Time</em> fields require
+further exploration. The only valid operation between two operands of <em>Date</em> or <em>Time</em>
+type is subtraction. This operation gives the difference between the two operands in days
+and minutes, respectively. Adding dates or time values makes no sense. However, a numeric
+value, which has to be an integer, can be added to a date or time value, provided that it
+is somehow specified if the value represents an amount of days, months or years in the
+case of dates, or minutes or hours in the case of time values. This is achieved by using
+special declarative characters, which denote an integer as the number of years, minutes...
+These characters are: 'y' for years, 'm' for months and minutes, 'd' for days and 'h' for
+hours. For example the following formula adds 31 days and 1 year to the supplied date: </p>
+
+<p align="center">1/12/1998 + 31d + 1y </p>
+
+<p align="left">Here follow some more examples which help delving into formulas with
+date/time operands: </p>
+
+<ul>
+  <li><p align="left">[Date_Field] + 200y - 10m </p>
+  </li>
+  <li><p align="left">[Time_Field] + 2h + 34m - 2m </p>
+  </li>
+  <li><p align="left">[Date_Field_1] - [Date_Field_2] + (1/1/1900 - [Integer_Field]d) </p>
+  </li>
+</ul>
+
+<p>Calculated fields are distinguished from the rest of the fields of the table by the
+color and the font of their names in the field header. </p>
+
+<p>Finally, the full cut/copy/paste functionality is supported among cells of tables in a
+database.Right-clicking on any cell will cause a pop-up menu to appear, which includes the
+above choices. The contents of any cell can be copied or cut and then be pasted into any
+other cell of any table in the database. Value copying should be practiced with care, as
+it is not always possible to paste any content into any cell, or the content may be
+changed because of the data type of the destination cell. For example an image can not be
+pasted into a cell that belongs to a field of <em>Number</em> type. Also, a string which
+is pasted into a cell of Number type, will have to be transformed to number and this may
+not always be possible. The copy mechanism generally preveils the user from inconsistent
+data copying (see first example). Also the mechanism always tries to perform data type
+conversion, when the type of the data and the type of the destination cell do not much.</p>
+
+<p>&nbsp;</p>
+
+<h4><font size="4">3. Functionality</font></h4>
+
+<p>This section briefly covers the functionality of the Database component. The
+presentation is performed by going through the menu system of the component. </p>
+
+<p><b>3.1 Database menu</b> </p>
+
+<p><b><i>3.1.1 New</i></b> </p>
+
+<p>Opens a new empty database. If a database was already open, it will be closed. If
+changes occurred to the database to be closed since the last time it was saved, the user
+will be prompted to save or discard changes. </p>
+
+<p><b><i>3.1.2 Open</i></b> </p>
+
+<p>Opens a database from its file. A file dialog appears, from which the user navigates
+the file system in order to find the database file. </p>
+
+<p><b><i>3.1.3 Close</i></b> </p>
+
+<p>Closes the current database. If changes occurred since the last time the database was
+saved, the user will be asked if he wants these changes to persist, before the database is
+closed. </p>
+
+<p><b><i>3.1.4 Rename</i></b> </p>
+
+<p>Changes the title of the open database. </p>
+
+<p><b><i>3.1.5 Save</i></b> </p>
+
+<p>Saves the current database. If the database is a new one, the user is prompted for a
+file name. This operation also saves all the tables in the database, if they were
+modified. So if any of the tables have just been created, the user will be prompted for a
+file name for these tables, too. </p>
+
+<p><b><i>3.1.6 Save As</i></b> </p>
+
+<p>Saves the current database in a different file. It does not affect the files of the
+tables inside the database. </p>
+
+<p><b><i>3.1.7 Import Table</i></b> </p>
+
+<p>The user can import a table to the database from an delimited ascii file. In this way
+the user can port data from other sources (DBMSs, Spreadsheets, GISs) to its database. The
+names of the fields of the table to be imported must be present in the first line of the
+text file. The import mechanism currently supports two delimiters, namely ',' and ';',
+with support for more to come. Also the data in the text file may be quoted or not. The
+user will have to specify the delimiter used in the text file before the operation starts.
+</p>
+
+<p><b><i>3.1.8 Export Table</i></b> </p>
+
+<p>The user may export any table in the database to a delimited ascii file. This enables
+migration of data from the database component to other popular desktop applications, like
+Access and Excel. First the user has to choose the delimiter to be used (one of ',' and
+';') and then if he would like the data to be quoted in the text file. </p>
+
+<p><b><i>3.1.9 Exit</i></b> </p>
+
+<p>Closes the open database and the Database component. <br>
+&nbsp; </p>
+
+<p><b>3.2 Table menu</b> </p>
+
+<p><b><i>3.2.1 New</i></b> </p>
+
+<p>The user can define a new table through this operation. A dialog box appears in which
+the user has to at least fill the title of the new table. Additionally he may specify the
+fields of the new table through a friendly and self explaining user interface. When the
+dialog closes the new, empty table is added to the database. </p>
+
+<p><b><i>3.2.2 Load</i></b> </p>
+
+<p>Adds a table to the database. The table is read from its file. A file dialog appears
+from which the user chooses the proper file. </p>
+
+<p><b><i>3.2.3 Remove</i></b> </p>
+
+<p>Removes the active table from the database. If this table has been modified since the
+last time it was saved, the user is asked if the the changes should persist. </p>
+
+<p><b><i>3.2.4 Save</i></b> </p>
+
+<p>Saves the active table of the database. If the active table is a new one, then the user
+is prompted for a file name through a file dialog. </p>
+
+<p><b><i>3.2.4 Save As</i></b> </p>
+
+<p>Saves the active table of the database in a new file. </p>
+
+<p><b><i>3.2.5 Rename</i></b> </p>
+
+<p>Edits the title of the active table of the database. </p>
+
+<p><b><i>3.2.6 Sort</i></b> </p>
+
+<p>Through this operation the user can sort a table on one or more fields. A dialog
+appears in which the user can specify up to three fields on which sorting will be
+performed. For each field the sorting direction (ascending/descending) is specified. The
+first field in the list of the fields to sort on is the most important while the last is
+the least important. </p>
+
+<p><b><i>3.2.7 Union</i></b> </p>
+
+<p>Unifies two tables of the database into a new one, which contains all the records of
+the two tables. The new table is added to the database. Two tables must have identical
+field structure in order to be unified. The first table which participates in the <i>Union</i>
+operation is the active one. The second is chosen through a dialog. Key fields and
+calculated fields are included in the resulting table, but are transformed to simple
+fields. </p>
+
+<p><b><i>3.2.8 Intersect</i></b> </p>
+
+<p>Intersects two tables into a new one which includes the common records of the two
+tables. Common refers to records with identical values in all their fields. <i>Intersection</i>
+can be performed on fields with identical field structure only. The first table which
+participates in the <i>Intersection</i> operation is the active one. The second is chosen
+through a dialog. </p>
+
+<p><b><i>3.2.9 Join</i></b> </p>
+
+<p>Joins two tables into a new one. The resulting table contains all the fields of the two
+tables. The records of the new table are formed by joining each record of the first table
+with all the records of the second table with which it has identical values in the common
+fields. Tables with no common fields cannot be joined. The term 'common' refers to both
+the name and the data type of the fields. </p>
+
+<p><b><i>3.2.10 Th-Join</i></b> </p>
+
+<p><i>Th-Join</i> is much like the <i>join</i> operation. The basic difference is that the
+user is free to specify the expression(s) among fields of the two tables, which will yield
+the records of the resulting table. When the operation is initiated the user is prompted
+for the second table to which the active one will be th-joined. Then a dialog box appears,
+where the user specifies which conditions should be met among fields of two tables, so
+that a record of the first one to be joined to a record of the second table. The resulting
+table is created in the same database. </p>
+
+<p><em><strong>3.2.11 Autoresize fields</strong></em></p>
+
+<p>This is a group of settings that adjust the way the table's fields respond to the
+insertion of new field in the table or, most importantly, to the resizing of an existing
+field.
+
+<ul>
+  <li><strong>Off</strong>. Resizing a field will not affect the size of any other field in
+    the table, but the width of the table as a whole. If the width of the table is not enough
+    for all of the fields to be visible, then a horizontal scrollbar appears.</li>
+  <li><strong>Last field</strong>. Only the width of the last field in the table changes as
+    another field's width changes.</li>
+  <li><strong>All fields</strong>. The increase or the decrease of a field's size, will affect
+    equally all the fields of the table.</li>
+</ul>
+
+<p><b><i>3.2.12 Properties</i></b> </p>
+
+<p>This operation pops up a dialog box which provides information about the active table
+in the database. This information includes the number of records in the table, the number
+of selected records, the number of fields, the number of selected fields, the names of the
+key fields of the table and the names of the calculated fields. </p>
+
+<p><b><i>3.2.13 Preferences</i></b> </p>
+
+<p>Through this operation the user can change the settings of the current database. These
+settings include: 
+
+<ul>
+  <li>The format in which dates are displayed in the tables.</li>
+  <li>The format in which time values are displayed in the tables.</li>
+  <li>If only the integer part of numbers should be displayed.</li>
+  <li>If the numeric values should be displayed in exponential format.</li>
+  <li>Continuous display of the decimal separator.</li>
+  <li>Display of the separator used in the integer part of the numeric values.</li>
+  <li>The decimal separator.</li>
+  <li>The separator used in the integer part of the numeric values.</li>
+  <li>The background color of the tables.</li>
+  <li>The selection color.</li>
+  <li>The grid color.</li>
+  <li>The highlight color for the non-editable fields.</li>
+  <li>The color in which values of each of the supported data types are displayed.</li>
+  <li>The font of the values in the tables.</li>
+  <li>The row height.</li>
+  <li>Whether the horizontal lines of the tables' grid are visible or not.</li>
+  <li>Whether the vertical lines of the tables' grid are visible or not.</li>
+  <li>Whether selecting a table's cell will select only the record to which the cell belongs,
+    or both the record and the field.</li>
+  <li>Whether the headers of the tables' fields should include the icons, which denote the
+    type of each field and if it belongs to the table's key.</li>
+  <li>Whether the non-editable fields are highlighted or not.</li>
+</ul>
+
+<p><b>3.3 Field menu</b> </p>
+
+<p><b><i>3.3.1 New</i></b> </p>
+
+<p>Creates a new field in the active table. The user specifies the name and the data type
+of the new field, if it's not calculated. If it is calculated the data type is determined
+by the formula, which has to be filled. Also the user specifies if the new field will
+belong to the key of the table, if its values will be editable and if it is removable. </p>
+
+<p><b><i>3.3.2 Edit</i></b> </p>
+
+<p>Edits the properties of an existing field, through the same dialog box in which fields
+are created. The user may alter any of the properties of the field, e.g. its name, data
+type, key attribute ... The user may also transform a calculated field to a simple one.
+However, the reverse transformation is not allowed. </p>
+
+<p><b><i>3.3.3 Remove</i></b> </p>
+
+<p>Removes the selected field(s) from the active table. A field becomes selected when the
+user clicks on its header. The user may select multiple fields, by clicking on field
+headers while holding the <i>Ctrl</i> key down. In the same way the user may deselect
+already selected fields. </p>
+
+<p><b><i>3.3.4 Editable</i></b> </p>
+
+<p>This is a check box menu item. It has two states (checked and not checked), which
+denote if the field is editable or not, respectively. Selecting this item moves the field
+from its current state to the other one. </p>
+
+<p><b><i>3.3.5 Removable</i></b> </p>
+
+<p>Works like the <i>Editable</i> menu item and adjusts the <i>Removable</i> property of
+the fields. </p>
+
+<p><b><i>3.3.6 Key</i></b> </p>
+
+<p>This menu item is also a check box. When checked the selected field belongs to the key
+of the table. When not checked, the opposite is true. The user can add the selected field
+to the table's key or remove it from the key, by selecting this menu item. </p>
+
+<p><b><i>3.3.7 Calculated</i></b> </p>
+
+<p>Works like the <i>Key</i> menu item. Through this the user may transform a calculated
+field to a simple one. The reverse operation is not allowed. </p>
+
+<p><b><i>3.3.8 Data type</i></b> </p>
+
+<p>When selected a second level menu pops up, which contains one entry for each supported
+data type. This menu shows the data type of the selected field. At the same type the user
+may alter the type of the selected field by choosing another one from the menu. Not all
+type conversions are permitted. Some of the valid conversions cause loss of data, but the
+user is always informed before the operation takes place and has the chance to drop it. </p>
+
+<p><b><i>3.3.9 Sort Ascending</i></b> </p>
+
+<p>Sorts the records of the table in ascending order based on the values in the selected
+field. </p>
+
+<p><b><i>3.3.10 Sort Descending</i></b> </p>
+
+<p>Sorts the records of the table in descending order, based on the values in the selected
+field. </p>
+
+<p><b><i>3.3.11 Select All</i></b> </p>
+
+<p>Selects all the fields of the table. </p>
+
+<p><b><i>3.3.12 Clear Selection</i></b> </p>
+
+<p>Deselects any selected field(s) of the table. </p>
+
+<p><b><i>3.3.13 Field Width</i></b> </p>
+
+<p>The fields of the table are resizable. This operation pops up a menu through which the
+user can specify the minimum and/or the maximum size to which the field may be resized.
+The operation takes place on all the selected fields. </p>
+
+<p><b><i>3.3.14 Freeze</i></b> </p>
+
+<p>This is a check box menu item. When checked, all of the selected fields are frozen,
+i.e. they are not resizable. When not checked, at least one of the selected fields is
+resizable. Through this operation the user may freeze the width of the selected fields and
+vice versa. <br>
+&nbsp; </p>
+
+<p><b>3.4 Record menu</b> </p>
+
+<p><b><i>3.4.1 New</i></b> </p>
+
+<p>Initiates the interactive insertion of a new record in the active table of the
+database. The insertion of a new record has to defer to the rule that the new record
+cannot be accepted in the table unless it has values, which are unique, for all the key
+fields of the table, if any exist. The record being inserted is colored red. When accepted
+in the table its color is reset. The user can navigate from cell to cell in the record
+using either the <i>TAB</i> and <i>SHIFT</i>+<i>TAB</i> keys, or by clicking with the
+mouse in each cell. Editing a cell is canceled with the <i>Escape</i> key. One more <i>Escape</i>
+results into the cancellation of the insertion of the new record. </p>
+
+<p><b><i>3.4.2 Remove</i></b> </p>
+
+<p>Removes the selected record(s) from the active table. </p>
+
+<p><b><i>3.4.3 Select All</i></b> </p>
+
+<p>Selects all the records of the active table. </p>
+
+<p><b><i>3.4.4 Invert Selection</i></b> </p>
+
+<p>The selected records become deselected, while the deselected ones become selected. </p>
+
+<p><b><i>3.4.5 Clear Selection</i></b> </p>
+
+<p>Deselects any selected records in the active table. </p>
+
+<p><b><i>3.4.6 Selected First</i></b> </p>
+
+<p>Promotes all the selected records to the top of the active table</p>
+
+<p>&nbsp;</p>
+
+<h4><font size="3">4. Image support</font></h4>
+
+<p><em>Image</em> is one of the supported data types. The user may store images in cells
+of fields of data type <em>Image</em>. These cells are not edited in the way all the other
+cells are edited. Double-clicking on a cell of an <em>Image</em> field will pop-up a file
+dialog, though which the user may navigate the file system and choose the image that
+should be inserted into the cell. Two image formats are supported, namely GIF and JPG.
+Once the image is inserted, it is part of the database and there is no connection with the
+file it was imported from. The user may adjust the height of the table's records -through
+the Preferences dialog in the Table menu- so that the images are completely visible in the
+table.</p>
+
+<p>The user may also create images of his own. A special icon editor is supplied, in which
+the user can create icons and insert them into cells of the table. The icon editor can
+also be used to edit images, which were inserted into the database from files. The only
+limitation is that the size of the edited images can not be greater than 32x32 pixels.
+Apart from icon creation and editing, the icon editor enables the user to export images
+from the database into files. Again both GIF and JPG image formats are supported.</p>
+
+<p>To bring up the icon editor the user has to right-click into a cell of an <em>Image</em>
+field. A pop-up menu appears from which the user selects the 'Icon Editor' choice.</p>
+</body>
+</html>
