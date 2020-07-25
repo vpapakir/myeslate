@@ -1,0 +1,51 @@
+ History:
+ 
+1.0 - 10Mar2000 - first creation (with only one "service supplier", Internet Explorer in MSJava)
+    - 11Mar2000 - implemented IENavigator service supplier
+                - adding NavigatorGUI
+1.1 - 14Mar2000 - now pressing ENTER at the address bar navigates to the given address (does the same action as pressing the "Go!" button)
+                - added URL & String Plugs
+                - added support for IE in Sun JVM using BeanXporter
+                - now trying to instantiate IE for MSJVM and if that fails, trying to instiate IE using BeanXporter
+                - added LOGO scripting support
+    - 15Mar2000 - added heavy-weight menubar
+                - added menuBarVisible and toolBarVisible storable properties
+                - made the component wider
+1.2 - 15Mar2000 - added navigation events support and made the "currentLocation" property a "bound" one (throws a PropertyChangeEvent when it changes)
+1.3 - 15Mar2000 - localized menus
+                - added support for paths relative to the current microworld document base
+                - added stop command to INavigator interface
+                - added "NAVIGATION.STOP" LOGO primitive (and localized Greek version)
+                - added "stop" command to menubar
+                - added "stop" button to toolbar
+1.4 - 14Jun2000 - checking if it's MS Java VM and trying to use the IE WebBrowser ActiveX control (through the IENavigatorMS supplier class) in that case
+                - now spawning suppliers via classname (no references to their classes)
+                - added "navigatorClass" property
+                - using ICE Browser if can't set any other Navigator supplier
+                - added beanInfo & icon
+1.5 - 15Jun2000 - using a retoutched (by Irene) version of the beanIcon
+    - 16Jun2000 - added "home" property so that when home action is done the user will be taken there (instead of relying on the supplier to take you to some browsing-supplier related "home" setting)
+                - default "home" value is placed at the resources so that is can be localized and have different default English/Greek/etc. home URL. For now it's "http://e-slate.cti.gr" for both English & Greek locales
+                - setting ICE supplier to ISO Greek encoding by default at startup
+                - implemented-non-working-feature: now the address bar can be hidden via the UI
+                - added "addressBarVisible" property
+                - added a status bar, visible by default
+                - added "statusBarVisible" property
+                - status bar can be hidden via the GUI or via the File/Options/StatusBarVisible property or by just clicking on it
+                - the View menu's checkboxes get synchronized when it's shown with the current visibility state of addressBar/toolBar/statusBar
+                - fixed problem with ICE's Greek in Java1.1.8: setting ICE to non-Dialog font (Helvetica) cause in Java1.1.8 punctuated Greek chars show as little square icons
+1.6 - 24Jun2000 - made "addressBarVisible", "statusBarVisible" and "home" properties persistent (storable)
+                - added icons and changed menu & toolbar look to be a bit more like IE
+                - added "refresh()" action to reload current page (to menu/toolbar)
+                - added "NAVIGATION.REFRESH" (and localized it for Greek) Logo primitive
+                - renamed "NAVIGATION.GOFORWARD" and "NAVIGATION.GOBACK" Logo primitives to "NAVIGATION.FORWARD" and "NAVIGATION.BACK" respectively
+                - added localized Greek names for the "NAVIGATION.GOHOME", "NAVIGATION.FORWARD" and "NAVIGATION.BACK" Logo primitives
+    - 25Jun2000 - now WebBrowser (IE+BeanXporter) works OK apart from events (using the new IE wrapper made with BeanXporter 1.3)
+1.7 - 26Jun2000 - now events work OK with BeanXporter IE-wrapper
+                - added "home" and "currentLocation" properties to the bean info (and supplying Greek localized versions)
+                - marked the "navigator" property in the bean info as a property for "expert" users only
+                - now using a custom property editor (drop down list with "Internet Explorer" and "ICE Browser" items) for the "navigatorClass" property
+                - now when changing URL, also firing a PropertyChangeEvent for "currentLocation" property (needed in order to have the "currentLocation" field in E-Slate's property editor updated) 
+ 
+ Known problems:
+- stop() method of ICENavigator class doesn't seem to stop the downloading of a page by the ICE browser

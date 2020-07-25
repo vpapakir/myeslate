@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Codebase: *.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl *.noordhoff.nl *.schoolwise.nl *.epn.nl localhost
+Application-Name: LTIWidget
+Caller-Allowable-Codebase: *.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl *.noordhoff.nl *.schoolwise.nl *.epn.nl localhost
+Application-Library-Allowable-Codebase: *

@@ -1,0 +1,9 @@
+[PropertyInfo]
+menuBarVisible,boolean,false,false, , ,true,<default>
+navigator,INavigator,false,false, , ,true,<default>
+toolBarVisible,boolean,false,false, , ,true,<default>
+[IconNames]
+
+
+
+

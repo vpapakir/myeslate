@@ -1,0 +1,84 @@
+package gr.cti.eslate.propertyEditors;
+
+
+import gr.cti.eslate.spinButton.*;
+import java.awt.*;
+import java.beans.*;
+import java.util.Date;
+
+
+public class TimePropertyEditor extends PropertyEditorSupport {
+
+    private PropertyChangeSupport pcs;
+    SpinButton spinButton = new SpinButton();
+    Date time = new Date();
+
+    public TimePropertyEditor() {
+        super();
+        pcs = new PropertyChangeSupport(this);
+        spinButton.setModelType(1);
+        spinButton.addValueChangedListener(new ValueChangedListener() {
+                public void valueChanged(ValueChangedEvent e) {
+                    Date oldTime = time;
+                    Date time = (Date) spinButton.getValue();
+
+                    pcs.firePropertyChange("Date", oldTime, time);
+                }
+            }
+        );
+    }
+
+    public void setValue(Object value) {
+        if (!Date.class.isInstance(value))
+            return;
+        if ((time != null) && time.equals(value))
+            return;
+        time = (Date) value;
+        if (time != null && spinButton != null) {
+            spinButton.setValue(time);
+        }
+    }
+
+    /**
+     * Return the current value of the property.
+     * @return	The requested value.
+     */
+    public Object getValue() {
+        return (Date) time;
+    }
+
+    /**
+     * @return The editor is a button which brings up a dialog.
+     */
+    public Component getCustomEditor() {
+        return spinButton;
+    }
+
+    public boolean supportsCustomEditor() {
+        return true;
+    }
+
+    /**
+     * Register a listener for the PropertyChange event. The class will fire a
+     * PropertyChange value whenever the value is updated.
+     * @param	l	An object to be invoked when a PropertyChange event is
+     *			fired.
+     */
+    public synchronized void addPropertyChangeListener(PropertyChangeListener l) {
+        pcs.addPropertyChangeListener(l);
+    }
+
+    /**
+     * Remove a listener for the PropertyChange event.
+     * @param	l	The PropertyChange listener to be removed.
+     */
+    public synchronized void removePropertyChangeListener(PropertyChangeListener l) {
+        pcs.removePropertyChangeListener(l);
+
+    }
+
+    public String getAsText() {
+        return null;
+    }
+
+}

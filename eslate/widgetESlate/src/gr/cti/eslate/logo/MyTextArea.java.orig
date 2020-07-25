@@ -1,0 +1,279 @@
+package gr.cti.eslate.logo;
+
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.text.*;
+
+import org.netbeans.editor.*;
+
+import gr.cti.eslate.editor.*;
+
+/**
+ * Text area used for the input and output area of the Logo component.
+ *
+ * @version     2.0.0, 24-Jun-2006
+ * @author      G. Birbilis
+ * @author      G. Tsironis
+ * @author      N. Drossos
+ * @author      K. Kyrimis
+ */
+public class MyTextArea extends Editor
+{
+  /**
+   * Serialization version.
+   */
+  final static long serialVersionUID = 1L;
+
+  private boolean initted = false;
+
+  String fontName = Logo.defaultFontName;
+  int fontSize = Logo.defaultFontSize;
+  private boolean lineNumbersVisible = false;
+
+  /**
+   * Create a text area.
+   * @param     type    The type of text being edited in the text area.
+   *                    This should be one of Editor.PLAIN_TEXT, Editor.JAVA,
+   *                    Editor.JAVASCRIPT, or Editor.LOGO. Anything else is
+   *                    equivalent to Editor.PLAIN_TEXT.
+   */
+  public MyTextArea(String type)
+  {
+    super();
+    createNewFile(type);
+    setStatusBarVisible(false);
+    addAncestorListener(new AncestorListener(){
+      public void ancestorAdded(AncestorEvent e)
+      {
+        // Make the line numbers visible/invisible when the component is
+        // added to another component. Doing it before, at initialization
+        // time, only works some of the time.
+        Settings.setValue(
+          getSelectedComponent().getEditorKit().getClass(),
+          SettingsNames.LINE_NUMBER_VISIBLE,
+          new Boolean(lineNumbersVisible)
+        );
+      }
+      public void ancestorMoved(AncestorEvent e)
+      {
+      }
+      public void ancestorRemoved(AncestorEvent e)
+      {
+      }
+    });
+    initted = true;
+  }
+
+  /**
+   * Specifies whether line numbers should be visible. This affects all
+   * the editor kits that are in use by this component (typically the Logo
+   * editor kit if this is the program area, or the plain text kit if this is
+   * the output area), which means that the change is propagated to all
+   * instances of the Editor class.
+   * @param     visible True if yes, false if no.
+   */
+  public void setLineNumbersVisible(boolean visible)
+  {
+    Settings.setValue(
+      getSelectedComponent().getEditorKit().getClass(),
+      SettingsNames.LINE_NUMBER_VISIBLE,
+      new Boolean(visible)
+    );
+    lineNumbersVisible = visible;
+  }
+
+  /**
+   * Checks whether line numbers are visible.
+   * @return    True if yes, false if no.
+   */
+  public boolean isLineNumbersVisible()
+  {
+    return lineNumbersVisible;
+  }
+
+  /**
+   * Appends the given text to the end of the document.
+   * @param     txt     The text to append.
+   */
+  public void append(String txt)
+  {
+    try {
+      insert(txt, getDocument().getLength());
+    } catch (BadLocationException ble) {
+    }
+  }
+
+  /**
+   * Changes the font of the text area.
+   * @param     font    The new font of the text area.
+   */
+  public void setFont(Font font)
+  {
+    if (!initted) {
+      super.setFont(font);
+    }else{
+      JEditorPane pane = getSelectedComponent();
+      if (pane != null) {
+        Class c = pane.getEditorKit().getClass();
+        fontName = font.getFamily();
+        fontSize = font.getSize();
+        setFontName(c, fontName);
+        setFontSize(c, fontSize);
+      }
+    }
+  }
+
+  /**
+   * Returns the font of the text area.
+   * @return    The requested font. The returned Font instance is created on
+   *            the fly from the font name and size.
+   */
+  public Font getFont()
+  {
+    return new Font(fontName, Font.PLAIN, fontSize);
+  }
+
+  public void appendSelected(String s)
+  {
+    setCaretPosition(getDocument().getLength());
+    append(s);
+    moveCaretPosition(getDocument().getLength());
+  }
+
+  public void appendScrolling(String s)
+  { //15-4-1999
+    append(s);                                    //first append
+    setCaretPosition(getDocument().getLength());  //then scroll (don't reverse these actions, else the area might not scroll at all [in case the old text was already just fitting the area])
+  }
+
+
+  public void changeSelection(String s)
+  {
+    int start = getSelectionStart();
+    replaceSelection(s);
+    select(start, start + s.length());
+  }
+
+  public void moveToNextLineStart()
+  {
+    int nextline = getCurrentLine() + 1;
+    try {
+      setCaretPosition(getLineStartOffset(nextline));
+    } catch (Exception e) {
+      //setRows(getRows()+1); //this doesn't work, just add append a "\n"
+      //System.out.println("Appending a new line");
+      append("\n");
+      try {
+        setCaretPosition(getLineStartOffset(nextline));
+      } catch (Exception ex) {
+        System.err.println(ex + "\nCouldn't append a new line!");
+      }
+    }
+  }
+
+  public void moveToStartOfLineAfterSelection()
+  {
+    try {
+      setCaretPosition(getSelectionEnd() - 1);  //11-1-1999: must have -1, so that if two whole lines are selected we don't move to next-next line
+    }
+    catch (Exception e) {
+      //try{setCaretPosition(getSelectionEnd()-1);}catch(Exception ex){}
+      System.out.println("moveToStartOfLineAfterSelection: no selection: just moving to start of next line");
+    } //30-9-1998:catching exceptions:if a LanguageException was thrown by Logo, there is no selection any more
+    moveToNextLineStart();
+  }
+
+  //noexceptions-start//
+  int getCurrentLine()
+  {
+    try {
+      return getLineOfOffset(getCaretPosition());
+    } catch (BadLocationException e) { //9-1-1998: seems to be unable to get the current line if we are at end of 1st line which is also end of document...
+      //System.err.println(e); //don't print this: occurs when at end of doc
+      try { //...retrying with caretpos-1 works
+        return getLineOfOffset(getCaretPosition() - 1);
+      } catch (BadLocationException ex) {
+        System.err.println("Error at getCurrentLine(): returning 1st line as the current one");
+        return 0;
+      }
+    }
+  }
+
+  int getCurrentLineStart()
+  {
+    try {
+      return getLineStartOffset(getCurrentLine());
+    } catch (BadLocationException e) {
+      System.err.println(e + "\nError at getCurrentLineStart");
+      return getCaretPosition();
+    }
+  }
+
+  int getCurrentLineEnd()
+  {
+    try {
+      return getLineEndOffset(getCurrentLine());
+    } catch (BadLocationException e) {
+      System.err.println(e + "\nError at getCurrentLineEnd");
+      return getCaretPosition();
+    }
+  }
+
+  int getLineStart(int line)
+  {
+    try {
+      return getLineStartOffset(line);
+    } catch (BadLocationException e) {
+      System.err.println(e + "\nError at getLineStart");
+      return 0;
+    }
+  }
+
+  int getLineEnd(int line)
+  {
+    try {
+      return getLineEndOffset(line);
+    } catch (BadLocationException e) {
+      System.err.println(e + "\nError at getLineEnd");
+      return 0;
+    }
+  }
+  //noexceptions-end//
+
+  public void selectCurrentLine()
+  {
+    try {
+      setCaretPosition(getCurrentLineStart());
+      moveCaretPosition(getCurrentLineEnd());  //11-1-1999: need -1 cause else setCaretPosition(getSelectionEnd()) at moveToStartOfLineAfterSelection fails, however placed -1 there (needed when selection two whole lines, cause cursor moved to the next next line
+    }
+    catch (Exception e) {
+      System.err.println("Error at selectCurrentLine: " + e);  //!!!
+      append("\n");
+    } //1-9-1998: add lines at end
+  }
+
+
+  public void unSelect()
+  {
+    try {
+      moveCaretPosition(getCaretPosition());
+    } //unSelect //11-1-1999: fixed-bug:was moving one pos behind!!!
+    catch (Exception e) { //in case we were at pos 0
+      setCaretPosition(0);
+    } //1-9-1998: ???
+  }
+
+  public void insertAtNewLineSelected(String s)
+  {
+    try {
+      int pos = getLineStartOffset(getLineOfOffset(getCaretPosition()));
+      insert(s + '\n', pos);  //20-10-1998: changed CR[=="\n"] to '\n'
+      select(pos, pos + s.length());
+    } catch (BadLocationException e) {
+      System.err.println(e);
+      appendSelected(s);
+    } //31-8-1998
+  }
+
+}

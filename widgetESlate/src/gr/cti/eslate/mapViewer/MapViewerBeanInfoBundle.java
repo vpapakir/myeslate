@@ -1,0 +1,111 @@
+package gr.cti.eslate.mapViewer;
+
+import java.util.ListResourceBundle;
+
+/**
+ * MapBeanInfo Bundle.
+ * <P>
+ *
+ * @author	Giorgos Vasiliou
+ * @version	3.0.0, 05-Apr-2000
+ */
+public class MapViewerBeanInfoBundle extends ListResourceBundle {
+	public Object [][] getContents() {
+		return contents;
+	}
+
+	static final Object[][] contents={
+		{"statusBarPosition",       "Status bar"},
+		{"statusBarPositionTip",    "Status bar position"},
+		{"statusBarVisible",        "Status bar visible"},
+		{"statusBarVisibleTip",     "Display or hide the status bar"},
+		{"statusBarOpaque",         "Status bar non-transparent"},
+		{"statusBarOpaqueTip",      "The status bar may be or may not be transparent indepently from the component"},
+		{"toolBarPosition",         "Tool bar"},
+		{"toolBarPositionTip",      "Tool bar position"},
+		{"toolBarVisible",          "Tool bar visible"},
+		{"toolBarVisibleTip",       "Display or hide the tool bar"},
+		{"opaque",                  "Component opaque"},
+		{"opaqueTip",               "The component background may be opaque or transparent"},
+		{"background",              "Background color"},
+		{"backgroundTip",           "The background color when the component is opaque and there is no picture"},
+		{"image",                   "Background image"},
+		{"imageTip",                "An image shown in the background of the component"},
+		{"imageViewPolicyTip",      "Choose how the background image will be displayed when its size is different from the component size"},
+		{"errorTolerance",          "Drawing error tolerance"},
+		{"errorToleranceTip",       "0=highest quality, lowest speed. >0=quality drops, speed rises."},
+		{"tools",                   "Tools"},
+		{"toolVisibleTip",          "Controls whether the tool will be shown in the toolbar"},
+		{"toolActivateVisible",     "Tool activate visible"},
+		{"toolSelectVisible",       "Tool select visible"},
+		{"circleSelectToolVisible", "Tool select circle visible"},
+		{"browseToolVisible",       "Tool browse visible"},
+		{"toolPanVisible",          "Tool pan visible"},
+		{"toolEditVisible",         "Tool edit visible"},
+		{"toolZoomVisible",         "Tool zoom visible"},
+		{"toolGridVisible",         "Tool grid visible"},
+		{"toolGoInVisible",         "Tool go in visible"},
+		{"toolGoOutVisible",        "Tool go out visible"},
+		{"toolRotateVisible",       "Tool rotate visible"},
+		{"toolMiniatureVisible",    "Tool display miniature map visible"},
+		{"toolMeterVisible",        "Tool meter visible"},
+		{"toolIdentifyVisible",     "Tool identify visible"},
+		{"toolLayerVisibilityVisible","Tool layer display visible"},
+		{"toolSpotVisible",         "Tool spot visible"},
+		{"toolNavigateVisible",     "Tool navigate agent visible"},
+		{"toolLegendVisible",       "Tool legend visible"},
+		{"meterPopupEnabled",       "Distance popup enabled"},
+		{"meterPopupEnabledTip",    "Popup showing distance when using the meter tool"},
+		{"selectionPopupEnabled",   "Selection popup enabled"},
+		{"selectionPopupEnabledTip","Popup showing area or radius when using the selection tool"},
+		{"selectionShapeTypeChanged","Selection shape type changed"},
+		{"selectionShapeGeometryChanged","Selection shape geometry changed"},
+		{"up",                      "UP"},
+		{"down",                    "DOWN"},
+		{"left",                    "LEFT"},
+		{"right",                   "RIGHT"},
+		{"normal",                  "NORMAL"},
+		{"stretched",               "STRETCHED"},
+		{"tiled",                   "TILED"},
+		{"always",                  "ALWAYS"},
+		{"never",                   "NEVER"},
+		{"onmouse",                 "ON MOUSE OVER"},
+		{"antialiasing",            "Antialiasing"},
+		{"antialiasingTip",         "If true, painting will be done using antialising."},
+		{"qualityOverSpeed",        "High graphics quality"},
+		{"qualityOverSpeedTip",     "High graphics quality comes to the expence of speed. Don't use high quality to speed up execution."},
+		{"showCoordinates",         "Show coordinates"},
+		{"showCoordinatesTip",      "Shows the coordinates on mouse motion over the map area"},
+		{"gridVisible",             "Grid: visible"},
+		{"gridVisibleTip",          "Shows or hides the grid on the map"},
+		{"gridColor",               "Grid: color"},
+		{"gridColorTip",            "The grid color when it is visible"},
+		{"gridStep",                "Grid: step"},
+		{"gridStepTip",             "The step between the lines of the grid in map metrics"},
+		{"border",                  "Border"},
+		{"borderTip",               "Controls the component border"},
+		{"mapBackground",           "Map background"},
+		{"mapBackgroundTip",        "The color of the map background when no background image exists"},
+		{"font",                    "Font"},
+
+		{"busyIconVisible",         "Busy indicator visible"},
+		{"busyIconVisibleTip",      "Makes busy indicator visible/invisible"},
+		{"showInactiveZoomRects",   "Show inactive zoom rectangles"},
+		{"showInactiveZoomRectsTip","If false shows the zoom rectangles only on mouse over"},
+
+		{"fontTip",                 "The font is applied to labels, tooltips etc"},
+		{"showAgentPositioningInfoDialog","Show agent positioning dialog"},
+		{"showAgentPositioningInfoDialogTip","If selected shows an information dialog when connecting an unpositioned agent"},
+		{"paintCrossOnAgent",       "Cross beneath agents"},
+		{"paintCrossOnAgentTip",    "Paints a cross beneath all agents, using their path color, indicating their position."},
+		{"mousePressedOnMapArea",   "Mouse button pressed on map area"},
+		{"mouseReleasedOnMapArea",  "Mouse button released on map area"},
+		{"mouseClickedOnMapArea",   "Mouse button clicked on map area"},
+		{"mouseEnteredOnMapArea",   "Mouse entered the map area"},
+		{"mouseExitedOnMapArea",    "Mouse exited from map area"},
+		{"mouseDraggedOnMapArea",   "Mouse dragged on map area"},
+		{"mouseMovedOnMapArea",     "Mouse moved on map area"},
+		{"mapViewerScaleChanged",   "Map Viewer scale changed"},
+		{"mapViewerBusyStatusChanged","Busy state changed"},
+	};
+}

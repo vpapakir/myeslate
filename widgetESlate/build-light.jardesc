@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="start/ESlateContainer__2.0.43.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/widgetESlate/build-light.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" mainClassHandleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.base.container{ESlateComposer.java[ESlateComposer" manifestLocation="/widgetESlate/META-INF/MANIFEST.MF" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ClipboardPrimitivesBundle_el_GR.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ComponentPrimitives.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ColorPrimitives.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ChronometerTimeParse.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.base.container.internalFrame.images"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.base.container.event"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ComponentPrimitivesBundle_el_GR.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ContainerPrimitivesBundle_el_GR.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{CanvasPrimitivesBundle_el_GR.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ChronometerPrimitives.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ClipboardPrimitives.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ClockResource_el_GR.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ContainerComponentPrimitives.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{CheckBoxPrimitivesBundle_el_GR.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ClockPrimitives.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.base.container.images"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ComboBoxPrimitives.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ChronometerResource.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{CheckBoxPrimitives.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ChronometerResource_el.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ComboBoxPrimitivesBundle_el_GR.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ContainerComponentPrimitivesBundle_el_GR.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.base.container"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ColorPrimitivesBundle_el_GR.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{ContainerPrimitives.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.scripting.logo{CanvasPrimitives.java"/>
+        <javaElement handleIdentifier="=widgetESlate/src&lt;gr.cti.eslate.base.container.internalFrame"/>
+    </selectedElements>
+</jardesc>

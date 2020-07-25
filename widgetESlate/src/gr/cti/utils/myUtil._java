@@ -1,0 +1,32 @@
+package gr.cti.eSlate.canvas;
+
+import java.awt.*;
+
+public class myUtil{
+
+/*
+static double orisma(int r,int i){
+ double result;
+ if (r==0)
+  if (i==0) result=0; else
+   if (i>0) result=Math.PI/2; else
+   //if (i<0)
+   result=3*Math.PI/2;
+   //else
+  else{
+   result=Math.atan(i/r);
+   if (r<0) result=result+Math.PI; else
+    if (i<0) result=result+2*Math.PI;
+  }
+ return result;   
+}
+
+static double angle(int x,int y, int x1,int y1){
+ double result;
+ result=orisma(x1,y1)-orisma(x,y);
+ if (result<0) result=result+2*Math.PI;
+ return result;
+}
+*/
+
+}

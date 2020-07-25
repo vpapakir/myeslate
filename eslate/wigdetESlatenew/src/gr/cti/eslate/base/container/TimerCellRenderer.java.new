@@ -1,0 +1,121 @@
+package gr.cti.eslate.base.container;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.tree.*;
+
+import gr.cti.eslate.base.container.*;
+
+/**
+ * Cell renderer for the PerformanceManagerPanel's tree.
+ *
+ * @author	Kriton Kyrimis
+ * @version	1.7.16, 31-Jan-2002
+ */
+public class TimerCellRenderer extends JPanel implements TreeCellRenderer
+{
+  /**
+   * The icon displayed before the name of PerformanceTimers, to distinguish
+   * them from plain PerformanceTimerGroups.
+   */
+  final static ImageIcon icon =
+    new ImageIcon(TimerCellRenderer.class.getResource("clock.gif"));
+  /**
+   * The label with the name of the PerformanceTimerGroup corresponding to the
+   * node that is currently being displayed.
+   */
+  private JLabel label;
+  /**
+   * The check box indicating the activation state of the
+   * PerformanceTimerGroup corresponding to the node that is currently being
+   * displayed.
+   */
+  private JCheckBox cBox;
+  /**
+   * The icon indicating the tinme mode of the PerformanceTimerGroup
+   * corresponding to the node that is currently being displayed.
+   */
+  private JLabel iconLabel;
+  /**
+   * The gap between <code>iconLabel</code> and <code>, when
+   * <code>iconLabel</code> is displaying an icon.
+   */
+  private Component gap;
+  /**
+   * The panel containing <code>cBox</code>, <code>iconLabel</code>, and
+   * <code>gap</code>.
+   */
+  private JPanel gadgets;
+  /**
+   * The label used for the root of the tree. The root has no meaning, and we
+   * only display a line of text for it, so that the "+" marks will appear for
+   * its children, which are the global PerformanceTimerGroups.
+   */
+  private JLabel rootLabel;
+
+  /**
+   * Create the cell renderer.
+   */
+  TimerCellRenderer()
+  {
+    gadgets = new JPanel();
+    BoxLayout bl = new BoxLayout(gadgets, BoxLayout.X_AXIS);
+    gadgets.setLayout(bl);
+    label = new JLabel((Icon)null);
+    iconLabel = new JLabel();
+    gap = Box.createHorizontalStrut(iconLabel.getIconTextGap());
+    setLayout(new BorderLayout(0, 0));
+    cBox = new JCheckBox();
+    gadgets.add(cBox);
+    gadgets.add(iconLabel);
+    add(gadgets, BorderLayout.WEST);
+    add(label, BorderLayout.CENTER);
+    rootLabel = new JLabel(
+      PerformanceManagerPanel.resources.getString("globalGroups")
+    );
+    Font f = rootLabel.getFont().deriveFont(Font.BOLD);
+    rootLabel.setFont(f);
+  }
+
+  /**
+   * Returns the component that the renderer of the tree will use to render a
+   * given node.
+   * @param	tree		The tree that is being rendered.
+   * @param	value		The node that is currently being rendered.
+   * @param	isSelected	Not used.
+   * @param	expanded	Not used.
+   * @param	leaf		Not used.
+   * @param	row		Not used.
+   * @param	hasFocus	Not used.
+   */
+  public Component getTreeCellRendererComponent(
+    JTree tree, Object value, boolean isSelected, boolean expanded,
+    boolean leaf, int row, boolean hasFocus)
+  {
+    TimerTreeNode node = (TimerTreeNode)value;
+    Component comp;
+    if (node.isRoot()) {
+      comp = rootLabel;
+    }else{
+      PerformanceTimerGroup timer = node.timer;
+      gadgets.remove(gap);
+      if (timer instanceof PerformanceTimer) {
+	gadgets.add(gap);
+	iconLabel.setIcon(icon);
+      }else{
+	iconLabel.setIcon(null);
+      }
+      if (timer == null) {
+	label.setText("***NULL***");
+	cBox.setSelected(false);
+      }else{
+	label.setText(timer.toString());
+	cBox.setSelected(timer.isActive());
+      }
+      comp = this;
+    }
+    revalidate();
+    return comp;
+  }
+}

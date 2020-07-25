@@ -1,0 +1,1045 @@
+/*
+?.?  - 14Aug1998 - changed all println(ex.getMessage()... to println(ex...
+
+6.2  - 24Feb1999 - fixed-bug: "Pause" button shows Res.localized message again
+                 - corrected About dialogs
+                 - made Pause button same height as Run & Stop buttons
+6.3  - 27Feb1999 - this project was using "8859_7" encoding, changed to "Default"
+6.4  - 27Mar1999 - using JAppletFrame to be able to run as an application
+                 - getAppletPath now doesn't throw null pointer exception when Canvas is run as an application
+                 - HTML parameter parsing code now doesn't throw a null pointer exception when Canvas is run as an application
+                 - now can load extra applets specified at the command line when running as an application
+     - 28Mar1999 - internal fix: was using some not needed Java2 methods and couldn't run under Java1.1
+     -  2Apr1999 - some changes to MyMachine at Virtuoso, so that when passed a null String as a Primitive Group name to load, not to throw a null pointer exceptions, but Virtuoso's SetupException
+     -  8Apr1999 - internal fixes to ComponentPrimitives primitive group implementation
+                 - when a text area loses focus it hides its caret
+6.5  - 15Apr1999 - now Logo uses a Command Line edit field at its bottom, where new commands can be executed with the ENTER key and where commands sent from the LogoCommand Pin are displayed, can also run from there using ENTER or the Run button on the toolbar/menubar
+                 - added a new "Try to unfreeze" menuitem at the "Machine" menu to feed the parser with lots of closing parentheses in case it is frozen waiting at some open parentheses that the user forgot to close
+                 - added F1 key for execution from the selected text area (not the command line text field, CR/ENTER is needed there) cause Java on Macs and Unix doesn't seem to grab the CTRL keypress
+                 - added F2 key for showing Logo environment info on the Java console
+6.6  - 18May1999 - the Logo command 'EACH [PRINT NAME]' should be working again now
+7.0  - 18May1999 - moving to E-Slate II
+7.01 - 19May1999 - now descending from ESlateApplet (SO's should be inited OK)
+7.02 - 22May1999 - now outgoing SOs pass the component as the event source, not its handle
+7.1  - 25May1999 - not listening for component notifications any more, but for primitive group notifications instead
+                 - listening for Logo moving to other microworld, adjusted scripting mechanism to work with many microworlds
+7.2  - 26May1999 - now when resizing does a "trick" to make Swing's JSpitPane behave OK... also keeps last fraction of the textPanes' areas as is and doesn't set to 6/10 (this is done at start)
+                 - separated scripting mechanism from the Logo component
+                 - Logo has its own primitive group to define its special handling of the "EDALL" primitive (moved from the ComponentPrimitives PrimitiveGroup which belongs to the scripting mechanism)
+7.21 - 1Jun1999  - removed a no-more needed inner class (MyComponentStateChangedListener)
+7.3  - 2Jun1999  - not an applet anymore
+7.4  - 4Jun1999  - now runs in a Frame as a Component and not an Applet when gr.cti.eslate.logo.Logo is run as an application
+7.5  - 18Jun1999 - added Font name selector at toolbar
+     - 21Jun1999 - added Font selector bar (name, size, style) at logo toolbar
+                 - HTML parameter handling code moved to LogoApplet
+     - 22Jun1999 - resizing should have the SplitPane keep the last view ratio of its children
+     - 23Jun1999 - enabled ThreadPrimitives, also loading List&Sound primitives
+     - 22Jul1999 - moved getAppletInfo() method to LogoApplet class
+     - 23Jul1999 - now using bigger and "Monospaced" font at Logo's InputArea
+                 - made the font toolbar non-floatable
+                 - placed the font toolbar separately under the buttons' toolbar
+     - 26Jul1999 - added "executeCommand(String)" to Logo so that having a Logo component instance, one can invoke Logo commands
+8.0  -  3Aug1999 - moved to package gr.cti.eslate
+8.1  - 19Aug1999 - "patch-fixed" the divider location bug: now ResizableScrollPane from birbUtils package starts at 200pixels for divider and then keeps the ratio set by the user (via dragging the divider)
+8.2  -  3Sep1999 - monospaced font isn't the default input textarea font anymore [Helvetica is used now] cause it doesn't show accented greek chars
+                 - split pane divider is now placed correctly (used decompiled patch-code from older Logo implementation) when loading a saved Logo component
+8.3  - 15Sep1999 - Logo now shows the divider at 6/10 when first created (showed at bottom)
+     - 20Sep1999 - added run/pause/stop etc. verbs
+     - 28Sep1999 - renamed setSuspended/isSuspended to setPaused/isPaused
+                 - added "Logo.EXECUTE" scripting command (calls <Logo>.executeLogoCommand)
+                 - added togglePausedState verb (to call this from containers' Logo enging using for example ASK "Logo_5 [DO "togglePausedState])
+8.4  -  8Oct1999 - added Logo.unpause() verb and Logo.STOP/Logo.PAUSE/Logo.UNPAUSE/Logo.TOGGLEPAUSE scripting commands
+8.5  - 14Oct1999 - now using E-Slate's current locale [instead of using Locale.getDefault()]
+                 - moved localization code out of main Logo class, to gr.cti.eslate.logo.Res class
+8.6  - 15Oct1999 - Logo now has storable "MenuBarVisible", "ToolBarVisible" and "HasFontSelector" properties
+8.7  - 19Oct1999 - Logo now has serialVersionUID
+8.8  -  4Dec1999 - added a status bar
+8.9  -  3Apr2000 - telling Logo's ancestor, BaseComponent, not to write(read) any data during externalization(internalization)
+9.0  -  4Apr2000 - added <Exception>.printStackTrace() calls to readExternal/writeExternal methods' try/catch blocks
+                 - removed "loadImageIcon" method from Logo class, now using the already existing "loadImageIcon" static method from the gr.cti.eslate.logo.Res class
+9.1  -  4Apr2000 - made the Run/Pause/Stop image icons have a transparent background instead of gray
+9.2  - 10May2000 - moved status bar from Logo class to LogoGUI class
+                 - now showing status bar messages when switching from executing to idle state
+                 - added "execQueueMaxSize" storable property for setting the execution queue length
+9.3  - 23May2000 - keeping loading compatibility with saved-data from previous beta versions of BaseComponent & Logo
+9.4  - 31May2000 - now the logic of loading the default primitives is not at Logo but at LogoEngine
+                 - Logo now has beanInfo and an icon
+9.5  - 29Jun2000 - removed startup of "ReflectionPrimitives" and "ListPrimitives" (started by the LogoEngine)
+                 - removed startup of "SoundPrimitives" (which caused QuickTime for Java to load!)
+9.6  - 30Jun2000 - now the LogoGUI class doesn't throw a LanguageException at closing
+                 - removed Logo messages regarding "starting wathcing the microworld for new component additions" and "finding preexisting components in the microworld"
+
+1.0.7 - 2Apr2001 - Change machine plug from single output to multiple output
+*/
+
+//need MACHINE_VARIABLES???
+//need MACHINE_PROCEDURES???
+//or maybe a DUMP_STATE to show the whole state to the bottom TextArea?
+
+//What happens when clock goes to 0? Can this happen after some time?
+
+package gr.cti.eslate.logo;
+
+import gr.cti.eslate.birbilis.BaseComponent; //18May1999: ESlateII //2Jun1999: not subclassing JApplet any more
+import gr.cti.eslate.base.*;
+import gr.cti.eslate.base.MicroworldChangedListener;
+import gr.cti.eslate.base.MicroworldChangedEvent;
+import gr.cti.eslate.protocol.*;
+import gr.cti.eslate.utils.*;
+import gr.cti.eslate.base.sharedObject.*;
+import gr.cti.eslate.sharedObject.*; //LogoCommandSO
+import gr.cti.eslate.scripting.logo.ComponentPrimitives;
+
+import gr.cti.utils.MSAgent; //30-8-1998 //21-1-1999: changed to gr.cti.utils.MSAgent
+
+import gr.cti.eslate.logo.Res;
+
+import javax.swing.*;
+import javax.swing.border.*;
+
+import java.awt.*;
+import java.util.*;
+import java.lang.*;
+import java.net.*;
+import java.io.*;
+import java.awt.event.*;
+
+import gr.cti.utils.*;
+
+import virtuoso.logo.*; //LOGO//
+
+ /* 28Aug2000: StorageVersion = 1
+              ComponentVersion = 1.0.1
+*/
+
+
+public class Logo extends BaseComponent //2Jun1999: not an Applet any more
+                  implements LogoPrimitiveGroupHandler,
+                             PrimitiveGroupAddedListener, //25May1999
+                             MicroworldChangedListener, //25May1999
+                             SharedObjectListener,
+                             gr.cti.eslate.scripting.LogoScriptable, //25May1999
+                             java.io.Externalizable,
+                             gr.cti.eslate.scripting.AsLogoRunner, //8Nov1999
+                             gr.cti.eslate.scripting.AsLogoNamesMemory //8Nov1999
+                             //gr.cti.eslate.scripting.AsLogoProceduresMemory //8Nov1999
+{
+
+// final static String VERSION="9.6"; //30Jun2000
+ final static String VERSION="1.0.7"; //31May2001
+ public static final String STORAGE_VERSION = "2";
+
+
+ static final long serialVersionUID = 19101999L; //19Oct1999: serial-version, so that new versions load OK
+
+ protected boolean isOldStylePersisting(){
+  return true; //03Apr2000: keep compatibility with old persistence data
+ }
+
+// LogoScriptable ////////////////////////////////////////////
+
+ public String[] getSupportedPrimitiveGroups(){
+  String[] s={"gr.cti.eslate.scripting.logo.LogoPrimitives"}; //26May1999
+  return s;
+ }
+
+// AsLogoRunner /////////////////////
+
+ public void queueLogoStatement(String s){ //asynchronous, returns immediately, queues statement in a FIFO to execute later
+  executeLogoCommand(s); //temp
+ }
+
+ public void doLogoStatement(String s){    //blocking, either places command in FIFO and waits for its turn to execute and return, or spawns another thread to run the command
+  executeLogoCommand(s); //temp
+ }
+
+ public String doLogoOperation(String s){  //blocking, returns result as a LogoObject.toString()
+  executeLogoCommand(s); //temp
+  return "";
+ }
+
+// AsLogoNamesMemory ////////////////    //8Nov1999
+
+ public String[] getLogoNames(){ //get all the named values' names
+  LogoList nameList=(LogoList)t.theLOGOmachine.getNameList();
+  int count=nameList.length();
+  String[] names=new String[count];
+  for(int i=count;--i>0;) names[i]=nameList.pickInPlace(i).toString();
+  return names;
+ }
+
+ public String getLogoValue(String name){ //get a value as a String, given its name
+  return t.theLOGOmachine.resolveName(new CaselessString(name)).toString();
+ }
+
+ public MyMachine getLogoMachine(){
+    return t.theLOGOmachine;
+ }
+
+ public void setLogoValue(String name, String value){ //set a "named value" given its name and its value (as its String representation)
+  t.theLOGOmachine.makeName(new CaselessString(name),new LogoWord(value)); //works for lists or need to parse for bounding [] and call new LogoList(value) then?
+ }
+
+// VERBS ////////////////////////////
+
+ public void run(){ //20Sep1999
+  Action(MACHINE_RUN);
+ }
+
+ public void stop(){ //20Sep1999
+  Action(MACHINE_STOP);
+ }
+
+ public void pause(){ //20Sep1999
+  setPaused(true);
+ }
+
+ public void unpause(){ //8Oct1999
+  setPaused(false);
+ }
+
+ public void togglePausedState(){ //28Sep1999: useful if we want to have a container's event handler written in Logo that says ASK "LogoXcomponent [DO "togglePausedState]
+  setPaused(!isPaused());
+ }
+
+ public void reset(){ //20Sep1999
+  Action(MACHINE_RESET);
+ }
+
+ public void clear(){ //20Sep1999
+  Action(FILE_NEW);
+ }
+
+////////////////////////////////////////
+
+ public void action(int actionID){ //20Sep1999
+  Action(actionID);
+ }
+
+ //////
+
+ public void executeLogoCommand(String s){ //26Jul1999: call from outside to invoke a Logo command
+  t.executeCommand(s);
+ }
+
+ public void editAll(){ //31-8-1998 //SCRIPTING//
+  t.executeCommand("POALL"); //first print all
+  t.executeCommand("ERALL"); //then erase them
+ }
+
+//////////////////////////////
+
+ public void setPaused(boolean paused){
+  action_Pause.setSelected(paused);
+ }
+ public boolean isPaused(){
+  return action_Pause.isSelected();
+ }
+
+//////////////////////////////
+
+ public void LoadPrimitiveGroup(PrimitiveGroup p){ //LOGO//
+  try{t.theLOGOmachine.installPrimitives(p);}
+  catch(Exception e){e.printStackTrace(); System.out.println("Error: Couldn't load the primitives");}; //26May1999: printing-stack-trace
+ }
+ public void UnLoadPrimitiveGroup(PrimitiveGroup p){ //LOGO//
+  try{t.theLOGOmachine.unInstallPrimitives(p);}
+  catch(Exception e){e.printStackTrace(); System.out.println("Error: Couldn't unload the primitives");}; //26May1999: printing-stack-trace
+}
+
+////////////////////////
+
+  /**
+   * Returns Copyright information.
+   * @return	The Copyright information.
+   */
+  public ESlateInfo getInfo()
+  {
+    return new ESlateInfo(Res.localize("title")+VERSION, Res.localizeArray("info"));
+  }
+
+ LogoCallSO LOGOcall=new LogoCallSO(getESlateHandle()); //don't forget to instantiate //18May1999: ESlateII
+ MachineSO machineSO=new MachineSO(getESlateHandle());
+
+ private void createPins(){ //3Sep1999
+  //LogoCallSO output pin//
+  try {
+   //Pin pin=new SingleOutputPin(getESlateHandle(),Res.localize("logocallpin"),new Color(190,90,50),Class.forName("gr.cti.eslate.sharedObject.LogoCallSO"),LOGOcall); //18May1999: ESlateII
+   Plug plug=new SingleOutputPlug(getESlateHandle(),Res.getRBundle(), "logocallpin",new Color(190,90,50),Class.forName("gr.cti.eslate.sharedObject.LogoCallSO"),LOGOcall); //18May1999: ESlateII
+   plug.setNameLocaleIndependent("Ενημέρωση για εντολές");
+
+   addPlug(plug);
+  }catch(Exception ex){System.out.println(ex+"\nError creating LogoCallSO output pin");} //14-7-1998: in case the class is missing
+
+  //LOGOCommandSO input pin// //31-8-1998: put this after LogoCallSO (better understanding when connecting Slider/Canvas/Logo)
+  try {
+   Plug plug=new SingleInputPlug(getESlateHandle(),Res.getRBundle(),"commandpin",new Color(160,80,170),Class.forName("gr.cti.eslate.sharedObject.LogoCommandSO"),this); //18May1999: ESlateII
+   plug.setNameLocaleIndependent("Εντολές/Μεταβολέας");
+
+   addPlug(plug);
+  }catch(Exception ex){System.out.println(ex+"\nError creating LogoCommandSO input pin");} //14-7-1998: in case the class is missing
+
+  try {
+   Plug plug=new MultipleOutputPlug(getESlateHandle(),Res.getRBundle(), "machinePin",new Color(70,0,90),Class.forName("gr.cti.eslate.sharedObject.MachineSO"),machineSO); //18May1999: ESlateII
+   plug.setNameLocaleIndependent("Μηχανή LOGO");
+
+   addPlug(plug);
+  }catch(Exception ex){System.out.println(ex+"\nError creating MachineSO output pin");} //14-7-1998: in case the class is missing
+
+ }
+
+////////////////////////////////////////////////////
+
+ //MenuBarVisible property//
+
+ public void setMenuBarVisible(boolean visible){ //15Oct1999
+  if(menubar!=null) menubar.setVisible(visible);
+ }
+
+ public boolean isMenuBarVisible(){ //15Oct1999
+  return (menubar!=null)?menubar.isVisible():false;
+ }
+
+ //ToolBarVisible property//
+
+ public void setToolBarVisible(boolean visible){ //15Oct1999
+  if(toolbar!=null) toolbar.setVisible(visible);
+ }
+
+ public boolean isToolBarVisible(){ //15Oct1999
+  return (toolbar!=null)?toolbar.isVisible():false;
+ }
+
+ //HasFontSelector property//
+
+ public void setHasFontSelector(boolean visible){ //15Oct1999
+  if(fontToolbar!=null) fontToolbar.setVisible(visible);
+ }
+
+ public boolean getHasFontSelector(){ //15Oct1999
+  return (fontToolbar!=null)?fontToolbar.isVisible():false;
+ }
+
+ //execQueueMaxSize property//
+
+ public void setExecQueueMaxSize(int size){
+  t.setExecQueueMaxSize(size);
+ }
+
+ public int getExecQueueMaxSize(){
+  return t.getExecQueueMaxSize();
+ }
+
+////////////////////////////////////////////////////
+
+public Logo(){
+ super();
+
+ setBorder(new NoTopOneLineBevelBorder(NoTopOneLineBevelBorder.RAISED));
+
+ t=new LogoGUI(LOGOcall); //do this first of all (instantiate LOGOcall first) //this also starts the LOGO machine
+
+ LOGO.setLayout(new BorderLayout());
+ LOGO.add(createMenus(),BorderLayout.NORTH);
+ LOGO.add(t,BorderLayout.CENTER);
+
+ createPins();
+
+ //LOAD THE TELL PRIMITIVE// --- //29-7-1998: this is needed for the querying of components' primitives (at Logo's loading) to work
+ try{
+  MyMachine machine=t.theLOGOmachine;
+  machineSO.setMachine(machine);
+  machine.componentPrimitives=new ComponentPrimitives(getESlateHandle().getESlateMicroworld()); //25May1999: making changes to scripting, so that it works when having many microworlds
+  LoadPrimitiveGroup(machine.componentPrimitives); //18May1999: ESlateII
+ }catch(Throwable ex){System.out.println("Couldn't load E-Slate's component primitives");} //20-8-1998 //8-8-1999: fixed a misspelling at the error message //9Jul1999: catch Errors too apart from Exceptions (Throwable is the parent of both)...
+
+ getESlateHandle().addMicroworldChangedListener(this); //25May1999: watch for Logo moving to other m/w
+ startWatchingMicroworld(); //31-8-1998: a LogoGUI must have been created first (to setup a LOGO machine)
+}
+
+ public JComponent getContent(){
+  if (LOGO==null) LOGO=new JPanel();
+  return LOGO;
+ }
+
+ public void destroy(){ //2-10-1998
+  t.finish();
+  MyMachine machine=t.theLOGOmachine;
+  machineSO.setMachine(machine);
+  machine.componentPrimitives.theESlateMicroworld=null;
+  machine.componentPrimitives.tellingComponents=null;
+  //super.destroy(); //11-1-1999: placed last, remove destroyCalled() checks
+ }
+
+//////////////
+
+public void startWatchingMicroworld(){ //31-8-1998
+ //System.out.println("Logo is starting to watch the MicroWorld");
+
+ t.theLOGOmachine.componentPrimitives.theESlateMicroworld=getESlateHandle().getESlateMicroworld(); //25May1999: set the machine to the new m/w
+
+ //25May1999-removed-nowUsingPrimitiveGroupNotifications// getESlateHandle().getESlateMicroworld().addComponentStateChangedListener(new myComponentStateChangedAdapter()); //27-7-1998: Register as listener for component state events (a LogoGUI must have been created first) //18May1999: ESlateII
+ getESlateHandle().getESlateMicroworld().addPrimitiveGroupAddedListener(this); //25May1999
+
+ //28-7-1998: After registering as listener for initializing components
+ //           ask also all the components that have already been started in the past
+ //           Suppose we are loading Logo with a bunch of other components
+ //           which are on the same HTML page: No init of any component has been
+ //           called till all have been created (?), so Logo will listen to all of them (and itself)
+ //           being initialized... Components existing previous to this incident should
+ //           already have been initialized and be started...
+ //           Problem might happen if some compos are stoped... maybe should register
+ //           for Creation event... then get all components already created... however
+ //           can't get that, can just get ones added in microworld, but don't know
+ //           when Kriton gives notification for create... maybe he gives after adding to mw?
+ //           ...most possibly...
+ //This must be right after the addComponentStateChangedListener...
+ try{
+  ESlateHandle[] v=getESlateHandle().getESlateMicroworld().getHandles(); //18May1999: ESlateII
+  for(int i=0;i<v.length;i++){
+   ESlateHandle a=v[i];
+   //System.out.println("Found a preexisting component named "+a.getComponentName());
+   if (/*a.isActive() && //???*/ //3-9-1998:don't use isActive(), failing to ask components for their primitives
+       a instanceof gr.cti.eslate.scripting.LogoScriptable)
+     loadPrimitiveGroups(((gr.cti.eslate.scripting.LogoScriptable)a).getSupportedPrimitiveGroups());
+  }
+ }catch(Exception e){System.err.println(e+"\nCouldn't ask existing components for any Logo primitives they might implement");}
+
+ try{ //27-3-1999: ask any ESlate-independent components registered for scripting, in case they need some PrimitiveGroups
+  Object[] o=gr.cti.eslate.scripting.logo.ComponentPrimitives.scriptableObjects.getAllObjects(); //26Jul1999: changed to use the INameService's i/f getAllObjects method: maybe should use one descendent "Logo name service" that wraps both the ESlate naming and the global nameservice in it (an inner class of Logo that can get the current microworld from Logo at any time)
+  for(int i=0;i<o.length;i++){
+   Object a=o[i];
+   //System.out.println("Found a preexisting scripting registered object named "+a.name);
+   if (a instanceof gr.cti.eslate.scripting.LogoScriptable)
+    loadPrimitiveGroups(((gr.cti.eslate.scripting.LogoScriptable)a).getSupportedPrimitiveGroups());
+  }
+ }catch(Exception e){System.err.println(e+"\nCouldn't ask existing scriptable objects for any Logo primitives they might implement");}
+
+}
+
+///////
+
+ public void loadPrimitiveGroups(String[] p){ //28-7-1998
+  t.theLOGOmachine.loadPrimitives(p);
+ }
+
+ //PrimitiveGroupAddedListener//
+ public void primitiveGroupAdded(PrimitiveGroupAddedEvent e){ //25May1999
+  //System.out.println("Logo: got PrimitiveGroupAddedEvent");
+  //e.getSource() gives the handle that requested those prim groups
+  loadPrimitiveGroups(e.getNames());
+ }
+
+ //MicroworldChangedListener//
+ public void microworldChanged(MicroworldChangedEvent e){
+  //System.out.println("Logo: moving to new microworld");
+  e.getOldMicroworld().removePrimitiveGroupAddedListener(this);
+  //...add: remove all primitive groups loaded by ESlate components (since they were from the old microworld)
+  startWatchingMicroworld();
+ }
+
+/* //1Jun1999: removed, not using ComponentStateChangeEvents any more (merged with PrimitiveGroupAddedEvents)
+ class myComponentStateChangedAdapter extends ComponentStateChangedAdapter{ //27-7-1998
+  public void componentInitialized(ComponentStateChangedEvent e){ //28-7-1998: Check for components initializing
+              //Kriton should name this ComponentInitializing
+   //System.out.println("Logo: A component is initializing...");
+   Object o=e.getSource();
+   if(o instanceof gr.cti.eslate.scripting.LogoScriptable)
+    loadPrimitiveGroups(((gr.cti.eslate.scripting.LogoScriptable)o).getSupportedPrimitiveGroups());
+  }
+ }
+*/
+
+/////////////////////
+
+ public synchronized void handleSharedObjectEvent(SharedObjectEvent soe){
+ LogoCommandSO commandSO=(LogoCommandSO)(soe.getSharedObject());
+// switch (soe.type){     //10May2000: since we only have one plug, removed "switch" statement for more speed when using the Slider-Logo plugging
+
+//  case LogoCommandSO.NEW_COMMAND:
+   //System.out.println(commandSO.getCommand());
+   t.executeCommand_Display(commandSO);
+//   break;
+// }
+}
+
+  /**
+   * Save the component's state.
+   * @param	oo	The stream where the state should be saved.
+   */
+  public void writeExternal(ObjectOutput out) throws IOException //18May1999: from old ESlate's saveState
+  {
+//      System.out.println("write external start");
+      try{
+       ESlateFieldMap fieldMap = new ESlateFieldMap(STORAGE_VERSION);
+       fieldMap.put("InputArea", t.inputArea.getText());
+       fieldMap.put("OutputArea", t.outputArea.getText());
+       //SAVE_MACHINE_IN_SLT_START: 17-12-1998
+        ByteArrayOutputStream buffer=new ByteArrayOutputStream();
+        IOStream ios=new IOStream(new BufferedWriter(new OutputStreamWriter(buffer)));
+        t.theLOGOmachine.printout(ios, null, null, null);
+        ios.close();
+        fieldMap.put("Buffer", buffer.toByteArray()); //ByteArrayOutputStream is not serializable: so we get an extra third memory copy of our data :-(
+        //SAVE_MACHINE_IN_SLT_END: 17-12-1998
+        //SAVE MACHINE's proc-executions' clock//
+        fieldMap.put("LevelClock", t.theLOGOmachine.level1clock);
+        fieldMap.put("Font", t.inputArea.getFont());
+
+        fieldMap.put("MenuBarVisible", isMenuBarVisible());
+        fieldMap.put("ToolBarVisible", isToolBarVisible());
+        fieldMap.put("FontSelector", getHasFontSelector());
+        fieldMap.put("ExecQueueMaxSize", getExecQueueMaxSize());
+        //if (getBorder() != null) {
+            try{
+                BorderDescriptor bd = ESlateUtils.getBorderDescriptor(getBorder(), this);
+                fieldMap.put("BorderDescriptor", bd);
+            }catch(Throwable thr){
+                thr.printStackTrace();
+            }
+        //}
+        out.writeObject(fieldMap);
+        out.flush();
+       }catch(Exception e){
+          System.err.println("Error saving all of Logo component's state");
+          e.printStackTrace(); //4Apr2000
+       }
+//       System.out.println("write external end");
+
+// old writeExternal
+/*   try{
+    out.writeObject(t.inputArea.getText()); //15-10-1998
+    out.writeObject(t.outputArea.getText()); //15-10-1998
+/* was
+    if(!saveMachineState(new File(getESlateHandle().getESlateMicroworld().getSaveFile().concat(".machine")))) //16-10-1998 //18May1999: ESlateII
+     System.err.println("Logo: Couldn't save machine's state"); //17-10-1998
+was*/
+    //SAVE_MACHINE_IN_SLT_START: 17-12-1998
+/*    ByteArrayOutputStream buffer=new ByteArrayOutputStream();
+    IOStream ios=new IOStream(new BufferedWriter(new OutputStreamWriter(buffer)));
+    t.theLOGOmachine.printout(ios, null, null, null);
+    ios.close();
+    out.writeObject(buffer.toByteArray()); //ByteArrayOutputStream is not serializable: so we get an extra third memory copy of our data :-(
+    //SAVE_MACHINE_IN_SLT_END: 17-12-1998
+
+    //SAVE MACHINE's proc-executions' clock//
+    out.writeObject(new Integer(t.theLOGOmachine.level1clock));
+
+    out.writeObject(t.inputArea.getFont()); //3Sep1999
+
+    out.writeObject(new Boolean(isMenuBarVisible())); //15Oct1999
+    out.writeObject(new Boolean(isToolBarVisible())); //15Oct1999
+    out.writeObject(new Boolean(getHasFontSelector())); //15Oct1999
+    out.writeObject(new Integer(getExecQueueMaxSize())); //10May2000
+
+   }catch(Exception e){
+    System.err.println("Error saving all of Logo component's state");
+    e.printStackTrace(); //4Apr2000
+   }*/
+  }
+
+  /**
+   * Load the component's state.
+   * @param	oi	The stream from where the state should be loaded.
+   */
+  public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException //18May1999: from old ESlate's loadState
+  {
+//      System.out.println("logo read external start");
+      Object firstObj = in.readObject();
+      if (!ESlateFieldMap.class.isAssignableFrom(firstObj.getClass())) {
+      // oldreadExternal
+//          System.out.println("logo old read external start");
+          try{
+              if(firstObj instanceof gr.cti.utils.ObjectHash)
+                  firstObj=in.readObject(); //23May2000: compatibility with previous beta versions: ignore any ObjectHash saved by the BaseComponent ancestor
+
+              //28-1-1999:this blocks the component// while(!appletHasDoneStartup); //1-12-1998: wait till applet has started //27-1-1999: !!!
+              t.inputArea.setText((String)firstObj); //15-10-1998
+              t.outputArea.setText((String)in.readObject()); //15-10-1998
+              //LOAD_MACHINE_FROM_SLT_START: 17-12-1998
+              ByteArrayInputStream buffer=new ByteArrayInputStream((byte[])in.readObject());
+              InterpreterThread interpreterthread = new InterpreterThread(t.theLOGOmachine,
+                  new IOStream(new BufferedReader(new InputStreamReader(buffer))));
+              interpreterthread.start();
+              //LOAD_MACHINE_FROM_SLT_END: 17-12-1998
+              //LOAD MACHINE's proc-executions' clock//
+              t.theLOGOmachine.level1clock=((Integer)in.readObject()).intValue(); //13-1-1998
+
+              t.inputArea.setFont((Font)in.readObject()); //3Sep1999
+
+              setMenuBarVisible(((Boolean)in.readObject()).booleanValue()); //15Oct1999
+              setToolBarVisible(((Boolean)in.readObject()).booleanValue()); //15Oct1999
+              setHasFontSelector(((Boolean)in.readObject()).booleanValue()); //15Oct1999
+
+              setExecQueueMaxSize(((Integer)in.readObject()).intValue()); //10May2000
+          }catch(Exception e){
+              System.err.println("Error loading all of Logo component's saved state");
+              e.printStackTrace(); //4Apr2000
+          }
+//          System.out.println("logo old read external end");
+      }else{   // new readExternal
+//          System.out.println("logo new read external start");
+          ESlateFieldMap fieldMap = (ESlateFieldMap) firstObj;
+
+          t.inputArea.setText((String)fieldMap.get("InputArea")); //15-10-1998
+          t.outputArea.setText((String)fieldMap.get("OutputArea")); //15-10-1998
+
+          //LOAD_MACHINE_FROM_SLT_START: 17-12-1998
+          ByteArrayInputStream buffer=new ByteArrayInputStream((byte[])fieldMap.get("Buffer"));
+          InterpreterThread interpreterthread = new InterpreterThread(t.theLOGOmachine,
+              new IOStream(new BufferedReader(new InputStreamReader(buffer))));
+          interpreterthread.start();
+          //LOAD_MACHINE_FROM_SLT_END: 17-12-1998
+
+          //LOAD MACHINE's proc-executions' clock//
+          t.theLOGOmachine.level1clock= fieldMap.get("LevelClock", 1);
+          t.inputArea.setFont((Font)fieldMap.get("Font")); //3Sep1999
+
+          setMenuBarVisible(fieldMap.get("MenuBarVisible", true)); //15Oct1999
+          setToolBarVisible(fieldMap.get("ToolBarVisible", true)); //15Oct1999
+          setHasFontSelector(fieldMap.get("FontSelector", true)); //15Oct1999
+
+          setExecQueueMaxSize(fieldMap.get("ExecQueueMaxSize", -1)); //10May2000
+
+          BorderDescriptor bd = (BorderDescriptor)fieldMap.get("BorderDescriptor");
+         // if (bd != null){
+              try{
+                  setBorder(bd.getBorder());
+              }catch(Throwable thr){}
+         // }
+//          System.out.println("logo new read external end");
+      }
+
+
+/*   try{
+    Object o=in.readObject(); if(o instanceof gr.cti.utils.ObjectHash) o=in.readObject(); //23May2000: compatibility with previous beta versions: ignore any ObjectHash saved by the BaseComponent ancestor
+    t.inputArea.setText((String)o); //15-10-1998
+    t.outputArea.setText((String)in.readObject()); //15-10-1998
+/*was
+    if(!loadMachineState(new File(getESlateHandle().getESlateMicroworld().getLoadFile().concat(".machine")))) //16-10-1998 //18May1999: ESlateII
+     System.err.println("Logo: Couldn't load machine's state"); //17-10-1998
+was*/
+
+/*    //LOAD_MACHINE_FROM_SLT_START: 17-12-1998
+    ByteArrayInputStream buffer=new ByteArrayInputStream((byte[])in.readObject());
+    InterpreterThread interpreterthread = new InterpreterThread(t.theLOGOmachine,
+     new IOStream(new BufferedReader(new InputStreamReader(buffer))));
+    //interpreterthread.setPriority(t._priority);
+    interpreterthread.start();
+    //LOAD_MACHINE_FROM_SLT_END: 17-12-1998
+
+    //LOAD MACHINE's proc-executions' clock//
+    t.theLOGOmachine.level1clock=((Integer)in.readObject()).intValue(); //13-1-1998
+
+    t.inputArea.setFont((Font)in.readObject()); //3Sep1999
+
+    setMenuBarVisible(((Boolean)in.readObject()).booleanValue()); //15Oct1999
+    setToolBarVisible(((Boolean)in.readObject()).booleanValue()); //15Oct1999
+    setHasFontSelector(((Boolean)in.readObject()).booleanValue()); //15Oct1999
+
+    setExecQueueMaxSize(((Integer)in.readObject()).intValue()); //10May2000
+
+   }catch(Exception e){
+    System.err.println("Error loading all of Logo component's saved state");
+    e.printStackTrace(); //4Apr2000
+   }
+   */
+  }
+
+//level 0///////////////////////////////////////////
+ JComponent LOGO;
+ LogoGUI t;
+
+ public boolean saveMachineState(File file){ //16-10-1998
+  try{
+   IOWriteFile iowritefile = new IOWriteFile(file, false);
+   t.theLOGOmachine.printout(iowritefile, null, null, null);
+   iowritefile.close();
+   return true;
+  }catch(LanguageException e){
+   System.err.println(e);
+   return false;
+  }
+ }
+
+ public boolean loadMachineState(File file){ //16-10-1998
+  try{
+   InterpreterThread interpreterthread = new InterpreterThread(t.theLOGOmachine, new IOStream(new BufferedReader(new FileReader(file))));
+   //interpreterthread.setPriority(t._priority);
+   interpreterthread.start();
+   return true;
+  }catch(FileNotFoundException e){
+   System.err.println(e);
+   return false;
+  }
+ }
+
+// MENUS ///////////////////////////////////////////////////////////
+
+ public final static int FILE_NEW=0x00;
+ public final static int FILE_OPEN=0x01;
+ public final static int FILE_SAVE=0x02;
+ public final static int FILE_PRINT=0x03;
+
+ public final static int EDIT_CUT=0x10;
+ public final static int EDIT_COPY=0x11;
+ public final static int EDIT_PASTE=0x12;
+ public final static int EDIT_CLEAR=0x13;
+ public final static int EDIT_SELECTALL=0x14;
+ public final static int EDIT_READ=0x1F; //30-8-1998
+
+ //27-7-1998//
+ public final static int MACHINE_LOADSTATE=0x20;
+ public final static int MACHINE_SAVESTATE=0x21;
+ public final static int MACHINE_RESET=0x22;
+ public final static int MACHINE_UNFREEZE=0x23; //15-4-1999
+
+ //11-11-1998//
+ public final static int MACHINE_RUN=0x30;
+ public final static int MACHINE_PAUSE=0x31;
+ public final static int MACHINE_STOP=0x32;
+
+ private JPanel createMenus(){ //15Oct1999: made private
+  JPanel p=new JPanel();
+  p.setLayout(new BorderLayout()); //don't use BoxLayout: places menus/buttons at the center of the menubar/toolbar
+  p.add(BorderLayout.NORTH,menubar=new LogoMenuBar()); //15Oct1999: keeping menubar reference, to use with setMenuBarVisible()/isMenuBarVisible()
+  p.add(BorderLayout.SOUTH,toolbar=createToolBar()); //15Oct1999: keeping toolbar reference, to use with setToolBarVisible()/isToolbarVisible() //both LogoToolBar and FontToolBar exists in it
+  return p;
+ }
+
+ private JPanel createToolBar(){ //15Oct1999: putting all toolbars in one panel, needed so that ToolBarVisible property works consistently (and if hidden, hides the fontToolbar too [if that one is visible] which is a child of it and has a separate visible property [if ToolBarVisible=true and HasFontSelector=true, only then the font tool bar will show up])
+  JPanel p=new JPanel();
+  p.setLayout(new BorderLayout());
+  p.add(BorderLayout.NORTH,new LogoToolBar());
+  p.add(BorderLayout.SOUTH,fontToolbar=createFontToolBar()); //15Oct1999: keeping fontToolbar reference, to use with setHasFontSelector()/getHasFontSelector()
+  return p;
+ }
+
+ //////////////
+
+  public void Action(int actionID){
+   ESlateFileDialog filedialog;
+   String s,s1;
+//  if (!AppletHasDoneStartup) return;
+  //NEW caused some bugs when other pages hadn't finished loading
+  //same might happen with OPEN file... so better ignore actions
+  //if applet hasn't finished its startup (that is loading any initial pages)
+  try{
+   switch(actionID){
+    //FILE//
+    case FILE_NEW:
+     Action(MACHINE_RESET);  //27-7-1998
+     t.inputArea.setText(""); //31-8-1998
+     t.outputArea.setText(""); //31-8-1998
+     break;
+    case FILE_OPEN: //if selection loads into selection else opens a new page//
+//swing// JFileChooser chooser=new JFileChooser();
+//swing// if(chooser.showDialog(Logo.this)==0) /*loadImage(chooser.getSelectedFile().getName())*/;
+
+//27-7-1998: adapted from TurtleTracks' GuiConsole
+            filedialog = new ESlateFileDialog(new Frame(), Res.localize("Open text file"),FileDialog.LOAD); //1-9-1998: added FileDialog.LOAD //14-1-1999: using ESlate's FileDialog
+            filedialog.setDirectory(curDIR); //1-9-1998 //17-10-1998: using curDIR
+            filedialog.setFile("*.lgo"); //29-12-1998: don't have filters, but this should show only .lgo files
+            filedialog.setDefaultExtension("lgo"); //14-1-1999
+            t.trackFocus(false); //31-8-1998
+            filedialog.show();
+            t.trackFocus(true); //31-8-1998
+            s1 = filedialog.getFile();
+            if(s1 == null)
+                return;
+            try
+            {
+                File file = new File(filedialog.getDirectory(), s1);
+                FileReader filereader = new FileReader(file);
+                char ac[] = new char[4096];
+                StringBuffer stringbuffer = new StringBuffer();
+                do
+                {
+                    int i = filereader.read(ac);
+                    if(i == -1)
+                        break;
+                    stringbuffer.append(ac, 0, i);
+                }
+                while(true);
+                //createEditor(stringbuffer.toString());
+                filereader.close(); //26-8-1998
+                String text=stringbuffer.toString();
+                MyTextArea a=t.getSelectedArea(); //don't call t.getSelectedArea() during changes cause focus moves arround
+                if (a.getSelectedText()!=null) a.replaceSelection(text); //27-8-1998
+                 else a.setText(text); //26-8-1998
+                curDIR=filedialog.getDirectory(); //17-10-1998: if success keep directory
+            }
+            catch(IOException ioexception)
+            {
+//                this$0.putLine("Couldn't read file: " + ioexception.toString());
+            }
+            return;
+    case FILE_SAVE: //if selection saves it else saves whole text//
+      //...dialog...Res.localize("Save text file")...
+            filedialog = new ESlateFileDialog(new Frame(), Res.localize("Save text file"),FileDialog.SAVE); //1-9-1998: added FileDialog.SAVE //14-1-1999: using ESlate's FileDialog
+            filedialog.setDirectory(curDIR); //1-9-1998 //17-10-1998: using curDIR
+            filedialog.setFile("*.lgo"); //29-12-1998: don't have filters, but this should show only .lgo files
+            filedialog.setDefaultExtension("lgo"); //14-1-1999
+            t.trackFocus(false); //31-8-1998
+            filedialog.show();
+            t.trackFocus(true); //31-8-1998
+            s1 = filedialog.getFile();
+            if(s1 == null)
+                return;
+//14-1-1999:using ESlateFileDialog// if (!s1.toLowerCase().endsWith(".lgo")) s1=s1.concat(".lgo"); //29-12-1998: appending ".lgo" extension if it's missing
+            try
+            {
+                File file = new File(filedialog.getDirectory(), s1);
+                FileWriter filewriter = new FileWriter(file);
+                MyTextArea a=t.getSelectedArea(); //don't call t.getSelectedArea() during changes cause focus moves arround
+                if ((s=a.getSelectedText())==null) s=a.getText(); //27-8-1998
+                filewriter.write(s,0,s.length());
+                filewriter.close(); //26-8-1998
+                curDIR=filedialog.getDirectory(); //17-10-1998: if success keep directory
+            }
+            catch(IOException ioexception)
+            {
+             System.err.println("Couldn't read file");
+             //should show warning dialog here
+            }
+            return;
+    case FILE_PRINT: //prints selected text//
+     break;
+
+    //EDIT//
+    case EDIT_CUT: t.getSelectedArea().cut(); break;
+    case EDIT_COPY: t.getSelectedArea().copy(); break;
+    case EDIT_PASTE: t.getSelectedArea().paste(); break;
+    case EDIT_CLEAR: t.getSelectedArea().replaceSelection(""); break;
+    case EDIT_SELECTALL:
+     t.getSelectedArea().selectAll();
+     t.getSelectedArea().requestFocus();
+     t.getSelectedArea().grabFocus();
+     break;
+    case EDIT_READ: MSAgent.say(t.getSelectedArea().getSelectedText()); break; //30-8-1998
+
+    //MACHINE// --- //25-7-1998
+    case MACHINE_LOADSTATE:
+            filedialog = new ESlateFileDialog(new Frame(), Res.localize("Load machine state"),FileDialog.LOAD); //1-9-1998: added FileDialog.LOAD //14-1-1999: using ESlate's FileDialog
+            filedialog.setDirectory(curDIR); //1-9-1998 //17-10-1998: using curDIR
+            filedialog.setFile("*.machine"); //29-12-1998: don't have filters, but this should show only .machine files
+            filedialog.setDefaultExtension("machine"); //14-1-1999
+            t.trackFocus(false); //31-8-1998
+            filedialog.show();
+            t.trackFocus(true); //31-8-1998
+            String s2 = filedialog.getFile();
+            if(s2 == null) return;
+            if(loadMachineState(new File(filedialog.getDirectory(), s2))) //16-10-1998
+             curDIR=filedialog.getDirectory(); //17-10-1998: if success keep directory
+            return;
+    case MACHINE_SAVESTATE:
+            filedialog = new ESlateFileDialog(new Frame(), Res.localize("Save machine state"), FileDialog.SAVE); //1-9-1998: added FileDialog.SAVE, Res.localized dialog caption //14-1-1999: using ESlate's FileDialog
+            filedialog.setDirectory(curDIR); //1-9-1998 //17-10-1998: using curDIR
+            filedialog.setFile("*.machine"); //29-12-1998: don't have filters, but this should show only ".machine" files
+            filedialog.setDefaultExtension("machine"); //14-1-1999
+            t.trackFocus(false); //31-8-1998
+            filedialog.show();
+            t.trackFocus(true); //31-8-1998
+            String s3 = filedialog.getFile();
+            if(s3 == null) return;
+//14-1-1999:using ESlateFileDialog//            if (!s3.toLowerCase().endsWith(".machine")) s3=s3.concat(".machine"); //29-12-1998: appending ".machine" extension if it's missing
+            if(saveMachineState(new File(filedialog.getDirectory(), s3))) //16-10-1998
+             curDIR=filedialog.getDirectory(); //17-10-1998: if success keep directory
+            return;
+    case MACHINE_RESET:
+     setPaused(false);
+     t.theLOGOmachine.terminateAllThreads();
+     t.theLOGOmachine.eraseAll();
+//     gr.cti.eslate.logo.ComponentPrimitives.loadAllComponentsPrimitives(t.theLOGOmachine); //8-4-1999: reload all the scriptable objects' primitives
+     break;
+    case MACHINE_UNFREEZE:
+     t.executeCommand("]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]"); //give the parser lots of closing parentheses (Virtuoso's parser has a bug that if stuck on an empty parenthesis, can't be reset with MACHINE_RESET (would need to make a new machine but would have to reload all primitives etc.)
+    case MACHINE_RUN:
+    // if (!isPaused()) //15-1-1999: if paused, Run not accepted?
+     setPaused(false); //15-2-1999: now poping-up the Pause button if is is depressed
+     t.executeSelected(); //15-4-1999: moved selection execution logic to LogoGUI (so that it can also run its cmdLine if the cursor is at the command-line text field)
+     break;
+//    case MACHINE_PAUSE:
+//     if (!paused) {t.theLOGOmachine.suspend(); paused=true;} //don't allow many calls to suspend (seem to be placed in a stack and would need as many unsuspend calls)
+//     break; //11-11-1998
+    case MACHINE_STOP:  t.theLOGOmachine.terminateAllThreads(); break; //11-11-1998
+    default: System.err.println("Unknown Action!!!");break;
+   }
+   }catch(Exception e){System.err.println(e+" Exception at Action()");}
+  }
+
+ class LogoMenuListener implements ActionListener{ //this listener calls Logo.Action
+  int menuID;
+  public LogoMenuListener(int menuID){super();this.menuID=menuID;}
+  public void actionPerformed(ActionEvent e) {Action(menuID);}
+ }
+
+ JMenuItem menuItem(String item,char mnemonic,int menuID){
+  JMenuItem mi;
+  String text; try{text=Res.localize(item);}catch(MissingResourceException e){text=item;}
+  ImageIcon i=Res.loadImageIcon("images/"+item+".gif",text);
+  if (i!=null) {
+   mi=new JMenuItem(text,i);
+   mi.setHorizontalTextPosition(JButton.RIGHT);
+  } else mi=new JMenuItem(text);
+  if (mnemonic!=' ') mi.setMnemonic(mnemonic);
+  mi.addActionListener(new LogoMenuListener(menuID)); //
+  return mi;
+ }
+
+ private JToolBar createFontToolBar() // 23Jul1999
+ {
+  //FontToolBar ftb=new FontToolBar(t.inputArea);
+  JToolBar ftb = new JToolBar();
+  fontSelector = new JComboBox(Editor.getAvailableFonts());
+
+  ftb.setFloatable(false);
+  return ftb;
+ }
+
+ class LogoMenuBar extends JMenuBar{
+
+  public LogoMenuBar(){
+   super();
+   setAlignmentX(LEFT_ALIGNMENT);
+   setAlignmentY(TOP_ALIGNMENT);
+
+  JMenu file = add(new JMenu(Res.localize("File")));
+  file.setMnemonic('F');
+  file.add(menuItem("New",'N',FILE_NEW));
+  file.add(menuItem("Open Text",'O',FILE_OPEN));
+  file.add(menuItem("Save Text",'S',FILE_SAVE));
+//24-12-1998:not-yet//  file.add(menuItem("Print",'P',FILE_PRINT));
+
+  JMenu edit = add(new JMenu(Res.localize("Edit")));
+  edit.setMnemonic('E');
+  edit.add(menuItem("Cut",'t',EDIT_CUT));
+  edit.add(menuItem("Copy",'C',EDIT_COPY));
+  edit.add(menuItem("Paste",'P',EDIT_PASTE));
+  edit.add(menuItem("Clear",'a',EDIT_CLEAR));
+  edit.add(new JSeparator());
+  edit.add(menuItem("Select All",'l',EDIT_SELECTALL));
+/**/  edit.add(menuItem("Read",'R',EDIT_READ)); //30-8-1998
+
+  //27-7-1998//
+  JRadioMenu machine = (JRadioMenu)add(new JRadioMenu(Res.localize("LOGO Machine"))); //15-1-1999: using JRadioMenu //15-2-1999: Java-bug?-fix: don't assign to a JMenu variable: Java has a bug? and calls the add(Action) method on the JRadioMenu instead of calling add(ToggleAction)
+//  machine.add(new JSeparator()); //15-2-1999: removed
+  machine.add(menuItem("Load State",'L',MACHINE_LOADSTATE));
+  machine.add(menuItem("Save State",'V',MACHINE_SAVESTATE));
+  machine.add(menuItem("Reset Environment",'E',MACHINE_RESET));
+  machine.add(menuItem("Try to unfreeze",'F',MACHINE_UNFREEZE)); //15-4-1999
+  machine.add(new JSeparator());
+
+ machine.add(menuItem("Run",'R',MACHINE_RUN));     //11-11-1998
+//  machine.add(menuItem("Pause",'P',MACHINE_PAUSE)); //11-11-1998
+  machine.add(action_Pause); //15-1-1999
+ //machine.add(action_Test); //15-2-1999
+  machine.add(menuItem("Stop",'S',MACHINE_STOP));   //11-11-1998
+
+//  menuBar.setAlignmentX(LEFT_ALIGNMENT);
+/* //not needed (ESlate component has its own help button)
+  JMenu help = add(new JMenu(Res.localize("Help")));
+  help.setMnemonic('H');
+  help.add(menuItem("About",'A',HELP_ABOUT));
+*/
+ }
+}
+
+ class LogoToolBar extends MyToolBar{ //15-1-1999 //21Jun1999: using MyToolBar
+
+  public void addTool(String name,int menuID) {
+   String text=Res.localize(name); //17-2-1999: removed try-catch for MissingResourceException, since Res.localize handles that
+   JButton b = (JButton) add(new JButton(Res.loadImageIcon("images/" + name + ".gif",text)));
+   b.setToolTipText(text);
+   b.setMargin(new Insets(0,0,0,0)); //don't remove else buttons will be very big
+   //b.getAccessibleContext().setAccessibleName(name);
+   b.setFocusPainted(false); //27-8-1998: don't draw focus rect
+   b.setRequestFocusEnabled(false); //2-9-1998
+   b.addActionListener(new LogoMenuListener(menuID)); //
+  }
+
+  public LogoToolBar(){
+   super();
+   setFloatable(false); //fixed-place toolbar
+   addTool("New",FILE_NEW);
+   addTool("Open Text",FILE_OPEN);
+   addTool("Save Text",FILE_SAVE);
+//24-12-1998:not-yet//   addTool("Print",FILE_PRINT);
+   addSeparator();
+   addTool("Cut",EDIT_CUT);
+   addTool("Copy",EDIT_COPY);
+   addTool("Paste",EDIT_PASTE);
+   addSeparator();                 //11-11-1998//
+   addTool("Run",MACHINE_RUN);     //11-11-1998//
+//   addTool("Pause",MACHINE_PAUSE); //11-11-1998//
+   add(action_Pause); //15-1-1999
+   //add(action_Test); //15-2-1999
+   addTool("Stop",MACHINE_STOP);   //11-11-1998//
+
+   addSeparator();
+
+/* //23Jul1999: decided to place FontToolbar as a separate toolbar below this one and not into this one
+   FontToolBar ftb=new FontToolBar(t.inputArea);
+   ftb.setBorder(null);
+   ftb.setFloatable(false); //23Jul1999
+   add(ftb);
+*/
+
+   //addSeparator();
+  }
+
+ }
+
+ String curDIR; //the current directory (not private, so that we can access it from LogoApplet)
+
+////////////////////////
+
+ abstract class LogoToggleAction extends ToggleAction{
+  public LogoToggleAction(String name){
+   String text=Res.localize(name);
+   putValue(NAME,text);
+   //putValue(SHORT_DESCRIPTION,text); //?
+   //putValue(LONG_DESCRIPTION,text); //?
+   ImageIcon icon=Res.loadImageIcon("images/"+name+".gif",text);
+   if (icon!=null) putValue(SMALL_ICON,icon); //check for null else will throw exception
+  }
+ }
+
+/*
+ LogoToggleAction //TEST//
+  action_Test=new LogoToggleAction("Test"){
+   public void act(boolean selected){
+    System.out.println(selected);
+   }
+  };
+*/
+
+ LogoToggleAction
+  action_Pause=new LogoToggleAction("Pause"){
+   boolean paused=false;
+   public void act(boolean selected){
+    if (selected){ //don't write by mistake (selected=true) !!!
+     if(!paused){t.theLOGOmachine.suspend(); paused=true;}
+    }else{
+     if(paused){t.theLOGOmachine.unsuspend(); paused=false;}
+    }
+   }
+  };
+
+  //////////////
+
+ private transient JMenuBar menubar; //15Oct1999
+ private transient JPanel toolbar; //15Oct1999
+ private transient JToolBar fontToolbar; //15Oct1999
+
+  //////////////
+
+  public static void main(String[] args) {
+   JComponentFrame.startJComponent("gr.cti.eslate.logo.Logo",Res.localize("title"),new String[]{});
+   JComponentFrame.startJComponents(args,args); //27-3-1999: start any additional applets requested by the user
+   //gr.cti.utils.JAppletFrame.startApplet("gr.cti.eslate.logo.LogoApplet","Logo",new String[]{});
+   //gr.cti.utils.JAppletFrame.startApplets(args,args); //27-3-1999: start any additional applets requested by the user
+  }
+
+  public Dimension getPreferredSize(){return new Dimension(400,400);}
+
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="java.nio.charset.Charset"/>
+<fullyQualifiedTypeName name="org.cbook.cbookif.rm.ResourceException"/>
+<fullyQualifiedTypeName name="org.cbook.cbookif.rm.ResourceContainer"/>
+<fullyQualifiedTypeName name="cl.MwdTransporter"/>
+<fullyQualifiedTypeName name="java.io.InputStream"/>
+<fullyQualifiedTypeName name="com.jcraft.jsch.JSch"/>
+<fullyQualifiedTypeName name="com.jcraft.jsch.Session"/>
+<fullyQualifiedTypeName name="com.jcraft.jsch.UserInfo"/>
+<fullyQualifiedTypeName name="com.jcraft.jsch.Channel"/>
+<fullyQualifiedTypeName name="com.jcraft.jsch.UIKeyboardInteractive"/>
+<fullyQualifiedTypeName name="java.io.BufferedReader"/>
+<fullyQualifiedTypeName name="java.io.InputStreamReader"/>
+<fullyQualifiedTypeName name="java.security.SecureRandom"/>
+<fullyQualifiedTypeName name="java.math.BigInteger"/>
+<fullyQualifiedTypeName name="widgetESlate.cloud.CloudUp"/>
+<fullyQualifiedTypeName name="widgetESlate.cloud.CloudDown"/>
+</qualifiedTypeNameHistroy>

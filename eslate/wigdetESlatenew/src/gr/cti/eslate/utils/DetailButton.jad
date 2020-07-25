@@ -1,0 +1,33 @@
+// Decompiled by DJ v3.5.5.77 Copyright 2003 Atanas Neshkov  Date: 28/4/2004 9:00:53 рм
+// Home Page : http://members.fortunecity.com/neshkov/dj.html  - Check often for new version!
+// Decompiler options: packimports(3) 
+// Source File Name:   DetailButton.java
+
+package gr.cti.eslate.utils;
+
+import java.awt.Component;
+import java.awt.Insets;
+import javax.swing.*;
+
+class DetailButton extends JButton
+{
+
+    DetailButton(String icon1, String icon2, JPanel p1, JPanel p2, Component c1, Component c2)
+    {
+        mainPanel = p1;
+        detailPanel = p2;
+        comp1 = c1;
+        comp2 = c2;
+        setIcon(new ImageIcon(getClass().getResource(icon1)));
+        setPressedIcon(new ImageIcon(getClass().getResource(icon2)));
+        setFocusPainted(false);
+        setMargin(new Insets(0, 0, 0, 0));
+        setBorder(null);
+        setBorderPainted(false);
+    }
+
+    JPanel mainPanel;
+    JPanel detailPanel;
+    Component comp1;
+    Component comp2;
+}

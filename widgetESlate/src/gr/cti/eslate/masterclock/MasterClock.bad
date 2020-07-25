@@ -1,0 +1,16 @@
+package gr.cti.eslate.masterclock;
+
+import java.awt.*;
+import javax.swing.*;
+
+public class MasterClock extends JPanel
+{
+  public MasterClock()
+  {
+    super();
+    setPreferredSize(new Dimension(200, 100));
+    setLayout(new BorderLayout());
+    JSlider scaleSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 1);
+    add(scaleSlider, BorderLayout.CENTER);
+  }
+}

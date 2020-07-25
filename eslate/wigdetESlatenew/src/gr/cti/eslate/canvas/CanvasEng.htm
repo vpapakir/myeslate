@@ -1,0 +1,309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0057)http://e-slate.cti.gr/Components/Canvas/bottom_canvas.htm -->
+<HTML><HEAD><TITLE>Canvas bottom frame</TITLE>
+<META content="text/html; charset=iso-8859-1" http-equiv=Content-Type>
+<META content="MSHTML 5.00.2014.210" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff link=#008000 text=#000080 vLink=#800000 
+stylesrc="http://e-slate.cti.gr/E-Slate.htm">
+<TABLE border=0 cellPadding=2 cellSpacing=4 width="100%">
+  <TBODY>
+  <TR>
+    <TD vAlign=top width="100%">
+      <DIV align=left>
+      <TABLE border=0 cellPadding=0 cellSpacing=0 width="100%">
+        <TBODY>
+        <TR>
+          <TD width="100%">
+            <H4><A name=Plugs><BIG><FONT 
+face=Verdana>Plugs</FONT></BIG></A></H4>
+            <UL>
+              <LI><B>
+              <P align=justify><FONT face=Verdana><SMALL>Colors</SMALL>: 
+              </FONT></B><FONT face=Verdana size=2>Connect this plug to a colour 
+              output plug to get the pen, fill and rubber colours from 
+              it.</FONT></P>
+              <LI>
+              <P align=justify><SMALL><FONT face=Verdana><B>Turtle Commands: 
+              </B>Connect this protocol plug to a Turtle component to host it in 
+              a new auto-created Turtle page (unless the page visible on top is 
+              already a turtle-page).</FONT></SMALL></P>
+              <LI>
+              <P align=justify><FONT face=Verdana><B><SMALL>Image</SMALL>: 
+              </B><SMALL>Connect this plug to a component to provide it with the 
+              image of this drawing page (there is only one image pin shown at a 
+              time, the one belonging to the top visible page from the stack of 
+              pages).</SMALL></FONT></P></LI></UL></TD></TR></TBODY></TABLE></DIV>
+      <P><A name="Applet parameters"><BIG><FONT face=Verdana><STRONG>Applet 
+      parameters</STRONG></FONT></BIG></A></P>
+      <DIV align=left>
+      <TABLE border=0 cellPadding=0 cellSpacing=0 width="100%">
+        <TBODY>
+        <TR>
+          <TD vAlign=top width="48%">
+            <UL>
+              <LI><SMALL><STRONG><FONT face="Courier New">menubar</FONT><SMALL> 
+              </SMALL><FONT face="Courier New">= true 
+              </STRONG><EM>|</EM><STRONG> false</STRONG></FONT></SMALL><BR><FONT 
+              face=Verdana><SMALL>Shows or hides the green bar at the 
+              components'</SMALL><BR><SMALL>top. 
+              [Default=true</SMALL></FONT><BIG><FONT 
+              face="Courier New">]</FONT></BIG> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>Page</B><I>I 
+              </I><STRONG>=</STRONG><I> 
+              </I><EM>name</EM></FONT></SMALL><BR><FONT face=Verdana><SMALL>Sets 
+              page(I)'s name, where I is a continuous number </SMALL><FONT 
+              face=Symbol>³</FONT> <SMALL>1, in the way that follows: 
+              </SMALL><BR><FONT size=2><STRONG>a.</STRONG> I</FONT></FONT><FONT 
+              face=Verdana size=2>f the name assignment is omitted 
+              <BR>&nbsp;&nbsp;&nbsp; (i.e. </FONT><SMALL><FONT 
+              face="Courier New"><B>Page</B><I>I</I><STRONG> 
+              =</STRONG></FONT></SMALL><FONT face=Verdana size=2> ) then a 
+              default name is &nbsp;&nbsp;&nbsp; <BR>&nbsp;&nbsp;&nbsp; 
+              assigned.<BR><STRONG>b.</STRONG> If the name assignment starts 
+              with a "_" <BR>&nbsp;&nbsp;&nbsp; (i.e.</FONT><SMALL><FONT 
+              face="Courier New"><B> Page</B><I>I</I><STRONG> 
+              =</STRONG></FONT></SMALL><FONT face=Verdana size=2> 
+              </FONT><EM><SMALL><FONT 
+              face="Courier New">_name</FONT></SMALL></EM><FONT face=Verdana 
+              size=2>) then the page is to be<BR>&nbsp;&nbsp;&nbsp; a Turtles' 
+              Page with that name.<BR><STRONG>c. </STRONG>If the name is just 
+              the string "_" <BR>&nbsp;&nbsp;&nbsp; (i.e.</FONT><SMALL><FONT 
+              face="Courier New"><B> Page</B><I>I</I><STRONG> 
+              =</STRONG></FONT></SMALL><FONT face=Verdana size=2> 
+              </FONT><EM><SMALL><FONT 
+              face="Courier New">_</FONT></SMALL></EM><FONT face=Verdana 
+              size=2>) then the turtle page gets a<BR>&nbsp;&nbsp;&nbsp; default 
+              name.<BR>All page names must be unique.</FONT> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>Image</B><I>? 
+              </I><STRONG>=</STRONG><I> </I><EM>image's file 
+              path</EM></FONT></SMALL><FONT face=Verdana><BR><SMALL>Sets 
+              Page(I)'s image [optional]</SMALL></FONT> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>Width</B><I>?</I><STRONG> 
+              =</STRONG> <EM>page(I)'s width</EM></FONT></SMALL><BR><SMALL><FONT 
+              face=Verdana>[default=max visible or Image Width] (I same as page 
+              number)</FONT></SMALL> </LI></UL></TD>
+          <TD vAlign=top width="48%">
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>Height</B><I>?</I><STRONG> 
+              =</STRONG> <EM>page(I)'s 
+              height</EM></FONT></SMALL><BR><SMALL><FONT 
+              face=Verdana>[default=Applet/Image Height] (I same as page 
+              number)</FONT></SMALL> 
+              <LI><FONT face="Courier New"><SMALL><STRONG>PenColor = 
+              </STRONG><EM>RGB color as hex (e.g. </EM><B>FF0000</B><EM> for 
+              red)</EM></SMALL><BIG><BIG><STRONG><BR></STRONG></BIG></BIG></FONT><SMALL><FONT 
+              face=Verdana>Sets Pen's (foreground's) color [default is 
+              black]</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><FONT face="Courier New"><SMALL><B>FillColo</B><STRONG>r 
+              =<SMALL> </SMALL></STRONG><EM>RGB color as hex (e.g. 
+              </EM><B>00FF00</B><EM> for 
+              green)</EM></SMALL><BIG><BR></BIG></FONT><SMALL><FONT 
+              face=Verdana>Sets the Fill color [default is red]</FONT></SMALL> 
+              </LI></UL>
+            <UL>
+              <LI><FONT face="Courier New"><SMALL><B>RubberColor 
+              </B><STRONG>=</STRONG> <EM>RGB color as hex (e.g. 
+              </EM><B>0000FF</B><EM> for 
+              blue)</EM></SMALL><BIG><BIG><BR></BIG></BIG></FONT><SMALL><FONT 
+              face=Verdana>Sets Rubber's (background's) color [default is 
+              white]</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><FONT face="Courier New"><SMALL><B>FilledShapes = true 
+              </B>|<B> false </B></SMALL><BIG><BR></BIG></FONT><SMALL><FONT 
+              face=Verdana>Sets the filling color for shape's interior 
+              [default=true]</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><FONT face="Courier New"><SMALL><B>Opaque = true </B>|<B> 
+              false</B></SMALL><BR></FONT><SMALL><FONT face=Verdana>Opaque 
+              TurtlePages [default=false]</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>PenSize = </B><EM>pen's 
+              size</EM></FONT></SMALL><FONT face=Verdana><BR></FONT><FONT 
+              face=Verdana size=2>Sets Pen's size [default=1]</FONT> 
+        </LI></UL></TD></TR></TBODY></TABLE></DIV>
+      <P><A name="E-Slate Logo primitives"><BIG><STRONG><FONT 
+      face=Verdana>E-Slate Logo primitives</FONT></STRONG></BIG></A></P>
+      <DIV align=left>
+      <TABLE border=0 cellPadding=0 cellSpacing=0 width="100%">
+        <TBODY>
+        <TR>
+          <TD vAlign=top width="48%">
+            <UL>
+              <LI><SMALL><FONT 
+              face="Courier New"><B>PLOT</B><STRONG>PIXEL</STRONG> <I>x</I> <I>y 
+              </I></FONT><FONT face=Verdana><BR>Plot a point at (<I>x</I>, 
+              <I>y</I>) and keep as last position</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><STRONG>PIXELCOLOR</STRONG> 
+              <I>x</I> <I>y </I></FONT><FONT face=Verdana><BR>Returns the color 
+              of the point at (<I>x</I>, <I>y</I>) as a list of RGB color 
+              elements</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>MOVETO</B> <I>x</I> 
+              <I>y</FONT><FONT face=Verdana><SMALL> 
+              </SMALL></I><BR></FONT></SMALL><FONT face=Verdana size=2>Move to 
+              (<I>x</I>, <I>y</I>) &#8211; keep (<I>x</I>, <I>y</I>)<B> </B>as the 
+              last position</FONT> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>LINE </B><I>x1 y1 x2 y2 
+              </I></FONT><FONT face=Verdana><BR>Draw a line from (<I>x1</I>, 
+              <I>y1</I>) to (<I>x2</I>, <I>y2</I>) and keep (<I>x2</I>, 
+              <I>y2</I>) as the last position</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>LineTo </B><I>x2 
+              y2</FONT><FONT face=Verdana><SMALL> 
+              </SMALL></I><BR></FONT></SMALL><FONT face=Verdana size=2>Draw a 
+              line from the last position to (<I>x2</I>, <I>y2</I>) and keep 
+              (<I>x2</I>, <I>y2</I>) as the new last position</FONT> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>RECTANGLE</B><I> x1 y1 x2 
+              y2 </I></FONT><FONT face=Verdana><BR>Draw a rectangle with 
+              (<I>x1</I>, <I>y1</I>) to (<I>x2</I>, <I>y2</I>) as two opposite 
+              corners and keep (<I>x2</I>, <I>y2</I>) as the last 
+              position</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>CIRCLE </B><I>centerX 
+              centerY radius </I></FONT><FONT face=Verdana><BR>Draw a circle 
+              with (<I>centerX</I>, <I>centerY</I>) as its center and a radius 
+              of length <I>radius </I>and keep (<I>x2</I>, <I>y2</I>) as the 
+              last position</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>(CIRCLE </B><I>centerX 
+              centerY circumreferenceX 
+              circumreferenceY<STRONG>)</STRONG></I></FONT><FONT 
+              face=Verdana><BR>Draw a circle with (<I>centerX</I>, 
+              <I>centerY</I>) as its center and with such a radius that the 
+              point (</FONT><FONT face="Courier New"><I>circumreferenceX, 
+              circumreferenceY</I></FONT><FONT face=Verdana>) is on the circle's 
+              circumreference. Keeps (<I>centerX</I>, <I>centerY</I>) as the 
+              last position</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>OVAL </B><I>x1 y1 x2 
+              y2</FONT><FONT face=Verdana><SMALL> 
+              </SMALL></I><BR></FONT></SMALL><FONT face=Verdana size=2>Draw an 
+              oval enclosed in a virtual rectangle with (<I>x1</I>, <I>y1</I>) 
+              to (<I>x2</I>, <I>y2</I>) as two opposite corners and keep 
+              (<I>x2</I>, <I>y2</I>) as the last position</FONT> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>TEXT </B><I>message x 
+              y</FONT><FONT face=Verdana><SMALL> 
+              </SMALL></I><BR></FONT></SMALL><FONT face=Verdana size=2>Draw the 
+              <I>message</I> string at (<I>x</I>, <I>y</I>) and keep (<I>x</I>, 
+              <I>y</I>) as the last position</FONT> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>CanonicalPolygon 
+              </B><I>centerX centerY<B> </B>edgeX edgeY edges </I></FONT><FONT 
+              face=Verdana><BR>Draw a canonical polygon (Pythagoreian) with its 
+              center at (<I>centerX</I>, <I>centerY</I>), one of its edges at 
+              (<I>edgeX</I>, <I>edgeY</I>) and a certain number of <I>edges</I>. 
+              Keeps (<I>edgeX</I>, <I>edgeY</I>) as the last 
+              position</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>SPRAY </B><I>x 
+              y</FONT><FONT face=Verdana><SMALL> </SMALL></I><BR></SMALL><FONT 
+              size=2>Spray</FONT></FONT><FONT face=Verdana size=2> at point 
+              (<I>x</I>, <I>y</I>) and keep (<I>x</I>, <I>y</I>) as the last 
+              position</FONT> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>COPY </B><I>x1 y1 x2 
+              y2</FONT><FONT face=Verdana><SMALL> 
+              </SMALL></I><BR></FONT></SMALL><SPAN 
+              style="FONT-FAMILY: Verdana; FONT-SIZE: 10pt"><FONT face=Verdana 
+              size=2>Copy to the Canvas clipboard the area of a virtual 
+              rectangle that has (<I>x1</I>, <I>y1</I>) and (<I>x2</I>, 
+              <I>y2</I>) as two of its corners</FONT></SPAN> </LI></UL>
+            <UL>
+              <LI><FONT face="Courier New"><SMALL><B>PASTE</B> </SMALL><I><FONT 
+              size=2>x y</FONT><FONT size=1> </FONT></I></FONT><FONT 
+              face=Verdana><SMALL><BR>Paste to the top visible page with an 
+              image from the Canvas clipboard with (<I>x</I>, <I>y</I>) as its 
+              top left corner</SMALL></FONT> </LI></UL></TD>
+          <TD vAlign=top width="48%">
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>CUT </B><I>x1 y1 x2 y2 
+              </I></FONT><FONT face=Verdana><BR>Cut the area of a virtual 
+              rectangle that has (<I>x1</I>, <I>y1</I>) and (<I>x2</I>, 
+              <I>y2</I>) as two of its corners and place it in the Canvas 
+              clipboard. The cut area gets filled with the current background 
+              color</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>CLEAR </B><I>x1 y1 x2 y2 
+              </I></FONT><FONT face=Verdana><BR>Clear with the current 
+              background color the area of a virtual rectangle that has 
+              (<I>x1</I>, <I>y1</I>) and (<I>x2</I>, <I>y2</I>) as two of its 
+              corners</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><B><FONT face="Courier New">STAMP</FONT><FONT 
+              face=Verdana><SMALL> </SMALL></B><BR></FONT></SMALL><FONT 
+              face=Verdana size=2>Copies the current vector image from a top 
+              visible turtle page to the nearest to the turtle page underlying 
+              drawing page</FONT> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>SetPenSize 
+              </B><I>penSize</FONT><FONT face=Verdana><SMALL> 
+              </SMALL></I><BR></FONT></SMALL><FONT face=Verdana size=2>Sets the 
+              pen&#8217;s size to <I>penSize</I></FONT> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>SetCanvasPageSize 
+              </B><I>width height </I></FONT><FONT face=Verdana><BR>Sets the 
+              <I>width</I> and <I>height</I> of the top visible page, stetching 
+              any old drawing to this new size</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT 
+              face="Courier New"><B>CanvasPageWidth</B></FONT><FONT 
+              face=Verdana><BR>Returns the width of the top visible page in the 
+              Canvas</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT 
+              face="Courier New"><B>CanvasPageHeight</B></FONT><FONT 
+              face=Verdana><BR>Returns the height of the top visible page in the 
+              Canvas</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT 
+              face="Courier New"><B>ClearCanvasPage</B></FONT></SMALL><BR><SMALL><FONT 
+              face=Verdana>Clears the top visible drawing page by filling it 
+              with the background color</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>SetCanvasForeground 
+              [</B><I>red</I> <I>green</I> <I>blue</I><B>]</B></FONT><FONT 
+              face=Verdana><BR>Sets the foreground color&#8217;s RGB 
+              elements</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>CanvasForeground 
+              </B></FONT><FONT face=Verdana><BR>Returns the foreground color as 
+              a list of RGB color elements</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>SetCanvasBackground 
+              [</B><I>red</I> <I>green</I> <I>blue</I><B>] </B></FONT><FONT 
+              face=Verdana><BR>Sets the background color&#8217;s RGB 
+              elements</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>CanvasBackground 
+              </B></FONT><FONT face=Verdana><SMALL><BR></SMALL>Returns the 
+              background color as a list of RGB color elements</FONT></SMALL> 
+              </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>SetCanvasFill 
+              [</B><I>red</I> <I>green</I> <I>blue</I><B>] </B></FONT><FONT 
+              face=Verdana><BR>Sets the fill color&#8217;s RGB elements</FONT></SMALL> 
+              </LI></UL>
+            <UL>
+              <LI><SMALL><FONT face="Courier New"><B>CanvasFill </B></FONT><FONT 
+              face=Verdana><BR>Returns the fill color as a list of RGB color 
+              elements</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT 
+              face="Courier New"><B>CanvasPAINTmode</B></FONT><FONT 
+              face=Verdana><BR>Sets the bit-blitting mode to AND 
+              (overwrite)</FONT></SMALL> </LI></UL>
+            <UL>
+              <LI><SMALL><FONT 
+              face="Courier New"><B>CanvasXORmode</B></FONT><FONT 
+              face=Verdana><BR>Sets the bit-blitting mode to eXclusive-OR 
+              (combine)</FONT></SMALL> 
+  </LI></UL></TD></TR></TBODY></TABLE></DIV></TD></TR></TBODY></TABLE>
+<P align=center>&nbsp;</P></BODY></HTML>

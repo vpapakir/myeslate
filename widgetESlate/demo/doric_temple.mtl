@@ -1,0 +1,72 @@
+#
+# Wavefront material file: c:\temp\doric_temple.mtl
+#
+# Converted by the PolyTrans geometry converter from Okino Computer Graphics, Inc.
+# Date/time of export: 06/20/2006 18:41:18
+#
+# Bounding box of geometry = (-3.49854,-2.03098,-0.276571) to (3.01703,2.01202,2.3608).
+
+newmtl default
+	Ns 32
+	d 1
+	illum 2
+	Kd 0.4 0.4 0.4
+	Ks 0.7 0.7 0.7
+	Ka 0.3 0.3 0.3
+
+newmtl surf_01
+	Ns 13
+	d 1
+	illum 2
+	Kd 1 1 1
+	Ks 0 0 0
+	Ka 0 0 0
+
+newmtl surf_02
+	Ns 13
+	d 1
+	illum 2
+	Kd 1 1 1
+	Ks 0 0 0
+	Ka 0 0 0
+
+newmtl surf_03
+	Ns 13
+	d 1
+	illum 2
+	Kd 1 1 1
+	Ks 0 0 0
+	Ka 0 0 0
+
+newmtl surf_04
+	Ns 13
+	d 1
+	illum 2
+	Kd 1 1 1
+	Ks 0 0 0
+	Ka 0 0 0
+
+newmtl surf_05
+	Ns 13
+	d 1
+	illum 2
+	Kd 1 1 1
+	Ks 0 0 0
+	Ka 0 0 0
+
+newmtl surf_06
+	Ns 13
+	d 1
+	illum 2
+	Kd 1 1 1
+	Ks 0 0 0
+	Ka 0 0 0
+
+newmtl surf_07
+	Ns 3
+	d 1
+	illum 2
+	Kd 0.772549 0.0705882 0.0705882
+	Ks 0.0298039 0.0298039 0.0298039
+	Ka 0 0 0
+

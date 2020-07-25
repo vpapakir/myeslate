@@ -1,0 +1,31 @@
+package gr.cti.eslate.base.help;
+
+public class ICEMouseOverLinkListener extends ice.iblite.MouseOverLinkListener
+{
+  MouseOverLinkListener listener;
+
+  public ICEMouseOverLinkListener(MouseOverLinkListener l)
+  {
+    listener = l;
+  }
+
+  public void mouseOverLinkEntered(ice.iblite.MouseOverLinkEvent e)
+  {
+    l.mouseOverLinkEntered(new ICEMouseOverLinkEvent(e));
+  }
+
+  public void mouseOverLinkExited(ice.iblite.MouseOverLinkEvent e)
+  {
+    l.mouseOverLinkExited(new ICEMouseOverLinkEvent(e));
+  }
+
+  public void mouseOverLinkMoved(ice.iblite.MouseOverLinkEvent e);
+  {
+    l.mouseOverLinkMoved(new ICEMouseOverLinkEvent(e));
+  }
+
+  public void mouseOverLinkClicked(ice.iblite.MouseOverLinkEvent e)
+  {
+    l.mouseOverLinkClicked(new ICEMouseOverLinkEvent(e));
+  }
+}

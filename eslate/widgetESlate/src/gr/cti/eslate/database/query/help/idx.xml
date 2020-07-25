@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='Windows-1253'  ?>
+<!DOCTYPE index PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 1.0//EN"
+    "index_1_0.dtd">
+<index version="1.0" topic="y">
+		<indexitem target="plugs" text="Έξοδος απάντησης"/>
+		<indexitem target="use_of_the_mouse" text="Αλλαγή διαστάσεων ψηφίδας"/>
+		<indexitem target="use_of_the_mouse" text="Αλλαγή θέσεως ψηφίδας"/>
+		<indexitem target="Toolbar2" text="Απόκρυψη επικεφαλίδων πεδίων"/>
+		<indexitem target="Toolbar1" text="Αφαίρεση από το υπάρχον σύνολο επιλεγμένων"/>
+		<indexitem target="Toolbar2" text="Αφαίρεση γραμμής"/>
+		<indexitem target="plugs" text="Βάση δεδομένων"/>
+		<indexitem target="Events" text="Γεγονότα"/>
+		<indexitem target="Toolbar1" text="Εκτέλεση ερώτησης"/>
+		<indexitem target="Toolbar2" text="Εμφάνιση επικεφαλίδων πεδίων"/>
+		<indexitem target="Toolbar1" text="Επιλογή από το σύνολο επιλεγμένων"/>
+		<indexitem target="Mycenae" text="Η ερώτηση στον Μυκηναϊκό πολιτισμό"/>
+		<indexitem target="Properties" text="Ιδιότητες"/>
+		<indexitem target="Toolbar1" text="Καθαρισμός ερώτησης"/>
+		<indexitem target="Screen_Layout" text="Κατάσταση ερώτησης επί παραδείγματι"/>
+		<indexitem target="Screen_Layout" text="Κατάσταση συντάκτη ερωτήσεων"/>
+		<indexitem target="Properties" text="Κουμπί αφαίρεσης γραμμής"/>
+		<indexitem target="Properties" text="Κουμπί αφαίρεσης στο σύνολο"/>
+		<indexitem target="Properties" text="Κουμπί εκτέλεσης της ερώτησης"/>
+		<indexitem target="Properties" text="Κουμπί εμφάνισης των επικεφαλίδων"/>
+		<indexitem target="Properties" text="Κουμπί εναλλαγής του τρόπου σχηματισμού της ερώτησης"/>
+		<indexitem target="Properties" text="Κουμπί επιλογής απο το σύνολο"/>
+		<indexitem target="Properties" text="Κουμπί καθαρισμού ερώτησης"/>
+		<indexitem target="Properties" text="Κουμπί νέου συνόλου"/>
+		<indexitem target="Properties" text="Κουμπί προσθήκης γραμμής"/>
+		<indexitem target="Properties" text="Κουμπί προσθήκης στο σύνολο"/>
+		<indexitem target="table_list" text="Λίστα πινάκων"/>
+		<indexitem target="use_of_the_mouse" text="Μεγιστοποίηση παραθύρου ψηφίδας"/>
+		<indexitem target="Toolbar1" text="Μετάβαση σε κατάσταση ερωτήσεων επί παραδείγματι"/>
+		<indexitem target="Toolbar2" text="Μετάβαση σε κατάσταση συντάκτη ερωτήσεων"/>
+		<indexitem target="table_list" text="Μη κρυφοί πίνακες"/>
+		<indexitem target="Mycenae" text="Μυκηναϊκός πολιτισμός"/>
+		<indexitem target="Toolbar1" text="Νέο σύνολο επιλεγμένων"/>
+		<indexitem target="Screen_Layout" text="Περιγραφή οθόνης"/>
+		<indexitem target="Areas" text="Περιοχές"/>
+		<indexitem target="Areas" text="Περιοχή δημιουργίας ερώτησης"/>
+		<indexitem target="Areas" text="Περιοχή εμφάνισης ερώτησης"/>
+		<indexitem target="Areas" text="Περιοχή κριτηρίων"/>
+		<indexitem target="Areas" text="Περιοχή πεδίων"/>
+		<indexitem target="Scripting" text="Προγραμματισμός"/>
+		<indexitem target="Toolbar2" text="Προσθήκη κενής γραμμής"/>
+		<indexitem target="Toolbar1" text="Προσθήκη στο υπάρχον σύνολο επιλεγμένων"/>
+		<indexitem target="How_we_use_the_Query" text="Πως χρησιμοποιούμε τη ψηφίδα ερώτηση"/>
+		<indexitem text="Ράβδος Εργαλείων">
+			<indexitem target="Toolbar1" topic="y" text="Ράβδος εργαλείων1"/>
+			<indexitem target="Toolbar2" topic="y" text="Ράβδος εργαλείων2"/>
+		</indexitem>
+		<indexitem target="How_we_use_the_Query" text="Σύνδεση Ερώτησης και Βάσης Δεδομένων"/>
+		<indexitem target="plugs" text="Σύνδεσμοι"/>
+		<indexitem target="How_we_use_the_Query" text="Σύνταξη απλής ερώτησης"/>
+		<indexitem target="How_we_use_the_Query" text="Σύνταξη ερώτησης"/>
+		<indexitem target="How_we_use_the_Query" text="Σύνταξη σύνθετης ερώτησης"/>
+		<indexitem target="Areas" text="Τελεστές"/>
+		<indexitem target="use_of_the_mouse" text="Χρήση του mouse"/>
+</index>

@@ -1,0 +1,38 @@
+/**
+ * Created by IntelliJ IDEA.
+ * User: tsironis
+ * Date: Dec 24, 2002
+ * Time: 5:53:44 PM
+ * To change this template use Options | File Templates.
+ */
+package gr.cti.eslate;
+
+import javax.swing.*;
+import java.util.EventObject;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
+
+public class DataExportedEvent extends EventObject {
+    private JComponent sourceComponent = null;
+    private Transferable data = null;
+    private int action = DnDConstants.ACTION_NONE;
+
+    public DataExportedEvent(Object source, JComponent sourceComponent, Transferable data, int action) {
+        super(source);
+        this.sourceComponent = sourceComponent;
+        this.data = data;
+        this.action = action;
+    }
+
+    public JComponent getSourceComponent() {
+        return sourceComponent;
+    }
+
+    public Transferable getData() {
+        return data;
+    }
+
+    public int getAction() {
+        return action;
+    }
+}

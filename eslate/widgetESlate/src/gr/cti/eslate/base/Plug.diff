@@ -1,0 +1,159 @@
+--- Plug.java	Tue Feb 27 14:35:16 2001
++++ Plug.java.new	Wed Mar  7 13:49:02 2001
+@@ -17,7 +17,7 @@
+  *
+  * @author	Petros Kourouniotis
+  * @author	Kriton Kyrimis
+- * @version	1.6.15, 27-Feb-2001
++ * @version	1.6.15, 7-Mar-2001
+  */
+ public abstract class Plug
+ {
+@@ -119,7 +119,7 @@
+   {
+     this(
+       handle,
+-      ((bundle != null) ? bundle.getString(key) : key),
++      ((bundle != null) ? bundle.getString(checkKey(key)) : checkKey(key)),
+       key, cl, shObjClass,
+       ((handle != null) ?  handle.getComponent() : null),
+       l
+@@ -167,7 +167,7 @@
+   {
+     this(
+       handle,
+-      ((bundle != null) ? bundle.getString(key) : key),
++      ((bundle != null) ? bundle.getString(checkKey(key)) : checkKey(key)),
+       key, cl, shObjClass, implementor, l
+     );
+   }
+@@ -308,7 +308,7 @@
+   {
+     this(
+       handle,
+-      ((bundle != null) ? bundle.getString(key) : key),
++      ((bundle != null) ? bundle.getString(checkKey(key)) : checkKey(key)),
+       key, cl, shObjClass, so,
+       ((handle != null) ?  handle.getComponent() : null),
+       l
+@@ -357,7 +357,7 @@
+   {
+     this(
+       handle,
+-      ((bundle != null) ? bundle.getString(key) : key),
++      ((bundle != null) ? bundle.getString(checkKey(key)) : checkKey(key)),
+       key, cl, shObjClass, so, implementor, l
+     );
+   }
+@@ -460,7 +460,7 @@
+   {
+     this(
+       handle,
+-      ((bundle != null) ? bundle.getString(key) : key),
++      ((bundle != null) ? bundle.getString(checkKey(key)) : checkKey(key)),
+       key, cl, shObjClass, protocol,
+       ((handle != null) ?  handle.getComponent() : null),
+       role, l
+@@ -523,7 +523,7 @@
+   {
+     this(
+       handle,
+-      ((bundle != null) ? bundle.getString(key) : key),
++      ((bundle != null) ? bundle.getString(checkKey(key)) : checkKey(key)),
+       key, cl, shObjClass, protocol, implementor, role, l
+     );
+   }
+@@ -742,7 +742,7 @@
+   {
+     this(
+       handle,
+-      ((bundle != null) ? bundle.getString(key) : key),
++      ((bundle != null) ? bundle.getString(checkKey(key)) : checkKey(key)),
+       key, cl, shObjClass, reqProtocols,
+       optProtocols,
+       ((handle != null) ?  handle.getComponent() : null),
+@@ -810,7 +810,7 @@
+   {
+     this(
+       handle,
+-      ((bundle != null) ? bundle.getString(key) : key),
++      ((bundle != null) ? bundle.getString(checkKey(key)) : checkKey(key)),
+       key, cl, shObjClass, reqProtocols, optProtocols, implementor, role, l
+     );
+   }
+@@ -917,7 +917,7 @@
+   {
+     this(
+       handle,
+-      ((bundle != null) ? bundle.getString(key) : key),
++      ((bundle != null) ? bundle.getString(checkKey(key)) : checkKey(key)),
+       key, cl, shObjClass, so, protocol,
+       ((handle != null) ?  handle.getComponent() : null),
+       role, l
+@@ -981,7 +981,7 @@
+   {
+     this(
+       handle,
+-      ((bundle != null) ? bundle.getString(key) : key),
++      ((bundle != null) ? bundle.getString(checkKey(key)) : checkKey(key)),
+       key, cl, shObjClass, so, protocol, implementor, role, l
+     );
+   }
+@@ -1196,7 +1196,7 @@
+   {
+     this(
+       handle,
+-      ((bundle != null) ? bundle.getString(key) : key),
++      ((bundle != null) ? bundle.getString(checkKey(key)) : checkKey(key)),
+       key, cl, shObjClass, so, reqProtocols, optProtocols,
+       ((handle != null) ?  handle.getComponent() : null),
+       role, l
+@@ -1264,12 +1264,32 @@
+   {
+     this(
+       handle,
+-      ((bundle != null) ? bundle.getString(key) : key),
++      ((bundle != null) ? bundle.getString(checkKey(key)) : checkKey(key)),
+       key, cl, shObjClass, so, reqProtocols, optProtocols, implementor, role, l
+     );
+   }
+ 
+   /**
++   * Checks that a resource bundle key is not null.
++   * @param	key	The resource bundle key to check.
++   * @return	The <code>key</code> argument.
++   * @exception	InvalidPlugParametersException	Thrown if the <code>key</code>
++   *			argument is <code>null</code>.
++   */
++  private static String checkKey(String key)
++    throws InvalidPlugParametersException
++  {
++    if (key == null) {
++      InvalidPlugParametersException e =
++        new InvalidPlugParametersException(
++	  ESlateMicroworld.resources.getString("nullKey")
++	);
++      throw e;
++    }
++    return key;
++  }
++
++  /**
+    * Specifies whether a plug is visible or not. This can be used to
+    * "hide" plugs that should not be shown to the user, but must not be removed
+    * from the component. (E.g., only show the plug associated with the
+@@ -2731,8 +2751,14 @@
+     */
+     PlugInternals(SharedObject so, Class cl, SharedObjectListener l,
+ 		  Object implementor, int role)
++      throws InvalidPlugParametersException
+     {
+       super();
++      if ((so != null) && (cl != null) && !cl.isInstance(so.getClass())) {
++        InvalidPlugParametersException e =
++	  new InvalidPlugParametersException(resources.getString("badShObj"));
++	throw e;
++      }
+       shObj = so;
+       sharedObjectsClass = cl;
+       sharedObjectListener = l;

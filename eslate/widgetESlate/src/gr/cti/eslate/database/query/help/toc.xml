@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='Windows-1253'  ?>
+<!DOCTYPE toc 
+    PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 1.0//EN"
+    "toc_1_0.dtd">
+<toc version="1.0" backcolor="ffffcc" topic="y">
+	<tocitem target="Screen_Layout" image="_fhtoc16" topic="y" text="Περιγραφή Οθόνης"/>
+	<tocitem image="_fhtoc0" text="User Interface">
+		<tocitem text="Κατάσταση συντάκτη ερωτήσεων">
+			<tocitem target="table_list" image="_fhtoc8" topic="y" text="Λίστα πινάκων"/>
+			<tocitem target="Areas" image="_fhtoc8" topic="y" text="Περιοχές"/>
+			<tocitem target="Toolbar1" image="_fhtoc8" topic="y" text="Ράβδος εργαλείων1"/>
+			</tocitem>
+		<tocitem text="Κατάσταση ερώτησης με παράδειγμα">
+			<tocitem target="Toolbar2" image="_fhtoc8" topic="y" text="Ράβδος εργαλείων2"/>
+			</tocitem>
+		</tocitem>
+	<tocitem target="plugs" image="_fhtoc8" topic="y" text="Σύνδεσμοι"/>
+	<tocitem target="Properties" image="_fhtoc8" topic="y" text="Ιδιότητες"/>
+	<tocitem target="Events" image="_fhtoc8" topic="y" text="Γεγονότα"/>
+	<tocitem target="Scripting" image="_fhtoc8" topic="y" text="Προγραμματισμός"/>
+	<tocitem image="_fhtoc0" text="Τρόποι χρήσης">
+		<tocitem target="use_of_the_mouse" image="_fhtoc8" topic="y" text="Χρήση του mouse"/>
+		<tocitem target="How_we_use_the_Query" image="_fhtoc8" topic="y" text="Πως χρησιμοποιούμε τη ψηφίδα ερώτηση"/>
+		</tocitem>
+	<tocitem image="_fhtoc0" text="Παραδείγματα εφαρμογής">
+		<tocitem target="Mycenae" image="_fhtoc8" topic="y" text="Μυκηναϊκός πολιτισμός"/>
+		</tocitem>
+</toc>

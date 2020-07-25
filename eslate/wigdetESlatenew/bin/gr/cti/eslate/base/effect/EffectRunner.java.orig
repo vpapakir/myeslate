@@ -1,0 +1,195 @@
+package gr.cti.eslate.base.effect;
+
+import java.awt.*;
+import java.lang.*;
+import java.awt.image.*;
+import java.awt.geom.*;
+import javax.swing.*;
+//import gr.cti.eslate.base.effect.*;
+
+/**
+ * This class implements an effect editor.
+ *
+ * @author	Augustine Grillakis
+ * @version	1.7.26, 2-Aug-2002
+ */
+public class EffectRunner {
+    public static final int NO_EFFECT = 0;
+    public static final int COMPOSITE_EFFECT = 1;
+    public static final int CLIPPING_EFFECT = 2;
+    public static final int INTERSECTION_EFFECT = 3;
+
+    /** The component on which the effect is applied */
+    private Component component;
+    /** The id of the current effect */
+    private int effectID = NO_EFFECT;
+    /** The Thread which plays the effect. A new thread is created every time
+     *  an effect is played. The EffectRunner plays only one thread at a time.
+     *  Every time a new thread is created, the previous one exits before the
+     *  new one starts.
+     */
+    private EffectThread effectThread;
+    /**
+     * Used for synchronization.
+     */
+    private Object sync = new Object();;
+
+    /** The current effect */
+    EffectInterface effect = null;
+
+    /**
+     * <code>Runnable</code> for invoking the component's
+     * <code>repaint()</code> method via
+     * <code>SwingUtilities.invokeAndWait()</code>.
+     */
+    private Runnable doRepaint = new Runnable()
+    {
+      public void run()
+      {
+	component.repaint();
+      }
+    };
+
+    /**
+     * Constructs the EffectRunner on a specific component.
+     * @param component  The component the effect materializes on.
+     */
+    public EffectRunner(Component component) {
+        this.component = component;
+    }
+
+    /**
+     * Starts playing the active effect, if one is set.
+     */
+    public void start() {
+	//System.out.println("Starting effect " + effect);
+        if (effect == null) return;
+
+	EffectThread th;
+	synchronized (sync) {
+	  th = effectThread;
+	}
+        if (th != null) {
+	    th.interrupt();
+            try {
+                th.join();
+            }catch (InterruptedException e) {
+            }
+        }
+/*
+	try {
+	  effectThread.stopThread();
+	} catch (NullPointerException e) {
+	  // effectThread may become null at any moment, so meke sure we catch
+	  // NullpointerExceptions!
+	}
+	while (effectThread != null) {
+	  try {
+	    Thread.currentThread().sleep(10);
+	  } catch (InterruptedException ie) {
+	  }
+	}
+*/
+
+        effectThread = new EffectThread(this);
+        effectThread.start();
+    }
+
+    /**
+     * Set active effect using one of the known Effect ids.
+     * @param newEffect The effect id. One of NO_EFFECT, COMPOSITE_EFFECT,
+     * CLIPPING_EFFECT, INTERSECTION_EFFECT.
+     */
+    public void setEffectID(int newEffect) {
+        if (effectThread != null)
+            effectThread.stopThread();
+        if (effectID == NO_EFFECT) {
+            effect = null; //new NoEffect(component);
+//            start();
+        }else if (effectID == COMPOSITE_EFFECT) {
+            effect = new CompositeEffect(100/*compositeNumberOfSteps*/, false, false);
+            start();
+        }else if (effectID == CLIPPING_EFFECT) {
+            effect = new ClippingEffect(50/*clippingNumberOfSteps*/, false, false);
+            start();
+        }else if (effectID == INTERSECTION_EFFECT) {
+            effect = new IntersectionEffect(100/*intersectionNumberOfSteps*/, IntersectionEffect.HEIGHT_INCREASE/*direction*/, false, false);
+            start();
+        }else
+            return;
+        this.effectID = newEffect;
+    }
+
+    /** Returns the id of the current effect. If the current effect is
+     *  unknown to the EffectRunner, NO_EFFECT is returned.
+     */
+    public int getEffectID() {
+        return effectID;
+    }
+
+    /**
+     * Sets the active effect.
+     * @param effect The effect.
+     */
+    public void setEffect(EffectInterface effect) {
+        if (effectThread != null)
+            effectThread.stopThread();
+        this.effect = effect;
+        start();
+    }
+
+    /**
+     * Returns the effect that is set to the EffectRunner.
+     * @return The active effect.
+     */
+    public EffectInterface getEffect() {
+        return effect;
+    }
+
+    /** Reports if an effect is currently running.
+     */
+    public boolean isEffectRunning() {
+        return (effectThread != null);
+    }
+
+    class EffectThread extends Thread {
+        EffectRunner effectRunner;
+        boolean stopFlag = false;
+        protected long sleepAmount = 30;
+
+        public EffectThread(EffectRunner effectRunner) {
+            this.effectRunner = effectRunner;
+        }
+
+        public void stopThread() {
+            stopFlag = true;
+        }
+
+        public void run() {
+            EffectInterface effect = effectRunner.effect;
+            effect.setBounds(effectRunner.component.getBounds());
+            effectRunner.effect.init();
+            do{
+                //effectRunner.component.repaint();
+		try {
+		  SwingUtilities.invokeAndWait(doRepaint);
+		}catch (Exception e) {
+		}
+                //try {
+                //    sleep(sleepAmount);
+                //} catch (InterruptedException e) {}
+
+            }while (!stopFlag && !effect.step());
+	    if (!stopFlag) {
+	      //effectRunner.component.repaint();
+	      try {
+		SwingUtilities.invokeAndWait(doRepaint);
+	      }catch (Exception e) {
+	      }
+	    }
+	    synchronized (sync) {
+	      effectRunner.effectThread = null;
+	    }
+        }
+    }
+}
